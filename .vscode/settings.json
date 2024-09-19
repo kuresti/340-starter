@@ -1,0 +1,16 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "render.com",
+            "connectString": "postgresql://motordb:kfTiGeNeeJonHEoecyBaXoWXoE2KKArq@dpg-crljvrjtq21c73egkk3g-a.oregon-postgres.render.com/motordb_peq2"
+        }
+    ]
+}
