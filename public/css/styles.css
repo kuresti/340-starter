@@ -1,6 +1,40 @@
-/******* Change Box Model ***************/
+/******* Change Box Model ***************
 *,
 *:before,
 *:after {
   box-sizing: border-box;
+}*/
+
+:root {
+  --heading-font: "Rubik", sans-serif;
+  --paragraph-font: "Lora", serif;
+  --main-font-color: 14213d;
+  --font-color-on-color: ffb703;
+  --primary-color: 023047;
+  --accent1: 023047;
+  --accent2: 669bbc;
+
 }
+
+/*Styling of the Header*/
+
+#top-header{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: var(--main-font-color);
+  font-family: var(--heading-font);
+}
+
+.siteName a:link{
+  font-size: 2em;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+#tools a:link{
+  font-size: 1.25em;
+  text-decoration: none;
+}
+
+/*Styling of Navigation*/
