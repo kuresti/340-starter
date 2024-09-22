@@ -3,15 +3,19 @@
     <%-  include('../partials/head') %>
 
 <body>
-    <div id="wrapper">
-        <%- include('../partials/header') %>
-        <%- include('../partials/navigation') %>
+    <div class="background-wrapper">
+        <div id="cse-motors-wrapper">
+            
+            <%- include('../partials/header') %>
+            
+            <%- include('../partials/navigation') %>
 
-         <main>
-            <%- body %>
-         </main>
+            <main>
+                <%- body %>
+            </main>
 
-         <%- include('../partials/footer') %>
+            <%- include('../partials/footer') %>
+        </div>
     </div>
 </body>
 </html>
