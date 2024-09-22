@@ -1,0 +1,131 @@
+/* 64em is also 1028px when basefont is 16px */
+@media only screen and (min-width: 64em) {
+    
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: 1.75em;
+    }
+
+    p {
+        font-size: 1.5em;
+    }
+
+    /*checkered background stylings at large view*/
+    body {
+        background-image: url("/images/site/small_check.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    /*CSE Motors content stylings at large view*/
+    #cse-motors-wrapper { 
+        background-color: white;
+        position: absolute;
+        left: 50%;
+        top: 5%;
+        transform: translate(-50%, -5%);
+        width: 110vh;
+        height: auto;
+        padding: 4%;
+        padding-bottom: 0;
+        border: 7px solid var(--accent2);
+        border-radius: 10px;
+        box-shadow: var(--box-shadow);
+    }
+
+    /*Site Name link stylings at Large view*/
+    .siteName a:link {
+        font-size: 2.25em;
+    }
+
+    /*Tools link stylings at large view*/
+    #tools a:link {
+        font-size: 1.25em;
+    }
+
+    /*Styling of Navigation at large view*/
+    nav ul {
+        font-size: 1.25em;
+    }
+
+/*hero-image styling at large view*/
+.hero-img  {
+    width: 60%;
+}
+
+    /*hero-card styling at large view*/
+.hero-card {
+    width: 20%;
+    height: 55%;
+    bottom: 30%;
+    left: 15%;
+    transform: translateX(-45%);
+}
+
+.hero-card li {
+    font-size: 1.15em;
+    font-weight: 600;
+}
+
+.hero-card h2 {
+    font-size: 1.35em;
+}
+
+/*Upgrades  and Reviews stylings large view*/
+
+/*Upgrades styling at large view*/
+.upgrades-cards-grid {
+    gap: 10px;
+}
+
+
+
+#upgrades-reviews-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+.upgrades-wrapper {
+    grid-column: 1 / 2;
+    grid-row: 1;
+}
+
+.upgrade-links {
+    font-size: 1em;
+}
+
+.upgrade-cards {
+    width: 120px;
+    height: 95px;
+}
+
+.reviews li {
+    font-size: 1.5em;
+}
+
+.reviews {
+    grid-column: 2 / 3;
+}
+
+/*Footer stylings at large view*/
+footer p {
+    margin: 0;
+    padding-top: .5em;
+    padding-bottom: 1em;
+    font-size: .75em;
+}
+
+
+
+}
