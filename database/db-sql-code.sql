@@ -237,4 +237,16 @@ VALUES   (
     5
   );
 
+  -- 4.Modify 'GM Hummer' record
+UPDATE public.inventory
+SET inv_description = REPLACE(inv_description, 'small interiors', 'a huge interior')
+WHERE inv_id = 10;
+
+-- 6.Update inventory table add "/vehicles" to middle of file path
+UPDATE 
+	public.inventory
+SET
+	inv_image = REPLACE(inv_image, '/', '/vehicles/'),
+	inv_thumbnail = REPLACE(inv_thumbnail, '/', '/vehicles/');
+
 
