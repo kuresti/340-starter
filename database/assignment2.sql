@@ -44,11 +44,11 @@ INNER JOIN public.classification "class"
 WHERE
 	inv.classification_id = 2;
 
--- 6.Update inventory table add "/vehicles" to middle of file path
-UPDATE 
-	public.inventory
+-- 6.Update 'inv_images' and 'inv_thumbnail' in inventory table
+UPDATE
+	public.inventory 
 SET
-	inv_image = REPLACE(inv_image, '/', '/vehicles/'),
-	inv_thumbnail = REPLACE(inv_thumbnail, '/', '/vehicles/');
+	inv_image = REPLACE(inv_image, 'images', 'images/vehicles'),
+	inv_thumbnail = REPLACE(inv_thumbnail, 'images', 'images/vehicles');
 
 
