@@ -88,16 +88,16 @@ nav ul li a {
   padding: 0.5em 2vw;
 }
 
-.hover-highlight a:hover {
+/*.hover-highlight a:hover {
   background-color: var(--accent2);
   color: var(--font-color-on-color);
-}
+}*/
 
 /*Wayfinding*/
-nav ul li.active a {
+/*nav ul li.active a {
   background-color: var(--accent1);
   color: var(--main-font-color);
-}
+}*/
 
 /*hero-container styling*/
 .hero-container {
@@ -203,6 +203,26 @@ nav ul li.active a {
   text-align: center;
   width: 150px;
   margin-bottom: 10px;
+}
+
+#flux-cap-card {
+  grid-column: 1 / 2;
+  grid-row: 1;
+}
+
+#flame-card {
+  grid-column: 2 / 3;
+  grid-row: 1;
+}
+
+#bumper-stickers-card {
+  grid-column: 1 / 2;
+  grid-row: 2;
+}
+
+#hub-caps-card {
+  grid-column: 2 / 3;
+  grid-row: 2;
 }
 
 
