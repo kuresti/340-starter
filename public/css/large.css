@@ -138,6 +138,13 @@ footer p {
     font-size: .75em;
 }
 
+/* Error styling at large view */
+img.alien {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 
 
 }
