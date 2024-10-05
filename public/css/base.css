@@ -323,11 +323,23 @@ nav ul li a {
   font-weight: 500;
 }
 
-/* 404 error styling */
+/* Error styling */
 img.alien {
+  max-width: 100%;
+  height: auto;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  
+}
+
+/* Error Link in footer styling */
+footer p a {
+  color: var(--main-font-color);
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+footer p a:hover {
+  color: var(--accent2);
 }
 
 
