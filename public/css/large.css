@@ -19,7 +19,7 @@
         background-image: url("/images/site/small_check.png");
         background-size: cover;
         background-position: center;
-        background-repeat: no-repeat;
+        background-repeat: repeat;
         min-height: 100vh;
         display: flex;
         justify-content: center;
