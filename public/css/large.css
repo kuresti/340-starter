@@ -118,6 +118,18 @@
     grid-column: 2 / 3;
 }
 
+/* Details stylings at large view */
+
+.details-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;    
+    gap: 2em;
+}
+
+.vehicle-title-img {
+    margin-top: 3em;
+}
+
 /*Footer stylings at large view*/
 footer p {
     margin: 0;
