@@ -11,7 +11,7 @@
   --main-font-color: #14213d;
   --font-color-on-color: #ffb703;
   --primary-color: #023047;
-  --accent1: #ffb703;
+  --accent1: #f7f6f3;
   --accent2: #0077B6;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   --text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
@@ -273,5 +273,71 @@ nav ul li a {
 .namePrice a:hover {
   text-shadow: var(--box-shadow);
 }
+
+/* Styling Details base view */
+.vehicle-title-img img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.vehicle-miles h3,
+.vehicle-price h3 {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.vehicle-miles span,
+.vehicle-price span {
+  align-content: center;
+  margin-top: .25em;
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.vehicle-description h3 {
+ display: inline-flex;
+ margin-bottom: 0;
+ margin-right: 10px;
+}
+
+.vehicle-description p {
+  display: inline;
+  overflow: hidden;
+  font-weight: 500;
+}
+
+.vehicle-price,
+.vehicle-color  {
+  background-color: var(--accent1);
+}
+
+.vehicle-color h3 {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.vehicle-color p {
+  display: inline;
+  font-size: 1.3em;
+  font-weight: 500;
+}
+
+/* 404 error styling */
+img.alien {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
+
+
+
+
+
+
 
 
