@@ -28,7 +28,7 @@ app.use(static)
 // Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
-app.use("/inv", inventoryRoute)
+app.use("/inv", utilities.handleErrors(inventoryRoute))
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 404, message: "It's life Jim, but not as we know it. You are lost, take a tip from E.T. and phone Home. (click the Home button)"})
@@ -41,10 +41,17 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  if(err.status == 404){
+    message = err.message || 'Page not found.'
+    image = "./images/errors/alien-phon-home.jpg"
+  } else {
+    message = 'Oh no! There was a crash. Maybe try a different route?'
+    image = "./images/errors/car-crash.webp"
+  }
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
+    image,
     nav
   })
 })
