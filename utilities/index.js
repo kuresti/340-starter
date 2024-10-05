@@ -34,15 +34,15 @@ Util.buildClassificationGrid = async function(data){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
       grid += '<li class="inv-card">'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
+      grid +=  '<a href="../../inv/details/'+ vehicle.inv_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img class="center-inv-img" src="' + vehicle.inv_thumbnail 
+      + ' details"><img class="center-inv-img" src="' + vehicle.inv_thumbnail 
       +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
       +' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
       grid += '<hr />'
       grid += '<h2>'
-      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
+      grid += '<a href="../../inv/details/' + vehicle.inv_id +'" title="View ' 
       + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
       + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
       grid += '</h2>'
@@ -65,4 +65,25 @@ Util.buildClassificationGrid = async function(data){
  **************************************** */
 Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
+/* ***************************************
+ * Build the details view HTML
+ * *************************************** */
+Util.buildInvItemDetails = async function(data) {
+  let grid = " "
+  if (data) {    
+    grid += '<div class="vehicle-title-img">'
+    grid += `<img src="${data.inv_image}" alt="Image of ${data.inv_make} ${data.inv_model} on CSE Motors />`
+    grid += '</div>'
+    grid += '<div class="vehicle-details>'
+    grid += `<h2>${data.inv_make} ${data.inv_model} Details</h2>`
+    grid += `<h3>Price: </h3><span>$${new Intl.NumberFormat('en-US').format(data.inv_price)}</span>`
+    grid += `<h3>Description: </h3><p>${data.inv_description}</p>`
+    grid += `<h3>Color: </h3><p>${data.inv_color}</p>`
+    grid += `<h3>Miles: </h3><span>${new Intl.NumberFormat('en-US').format(data.inv_miles)}</span>`
+    grid += '</div>'
+  } else {
+    grid += '<p class="notice">Sorry, no vehicle details could be found.'
+  }
+  return grid
+}
 module.exports = Util
