@@ -5,6 +5,8 @@
 /* ***********************
  * Require Statements
  *************************/
+const session = require("express-session")
+const pool = require('./database/')
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
@@ -13,7 +15,32 @@ const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const errorRoute = require("./routes/errRoute")
+const accountRoute = require("./routes/accountRoute")
 const utilities = require("./utilities/")
+
+/* ***********************
+ * Middleware
+ * *********************** */
+app.use(session({ // invokes app.use applies what is being invoked throughout the entire application
+  store: new (require('connect-pg-simple')(session))({ //where session data will be stored. New session table created. { indicates a new object sent into the connectino with config info
+    createTableIfMissing: true,//tells the session to create a "session" table in the DB if it does not exist
+    pool, //uses the DB connection pool to interact with the DB server
+  }), //closes the config data object and the "new" session store creation function
+  secret: process.env.SESSION_SECRET,// indicates a "secret" name-value pair used to protect the session.
+  resave: true, //usually false, but need to resave the session table after each message because we are using "flash" messages
+  saveUninitialized: true, //Important to the creation process when the session is first created.
+  name: 'sessionId'// "name" assigned to the unique "id" created for each session. Session id will be stored in a cookie passes back and forth from server to browser to maintain "state".
+}))
+
+// Express Messages Middleware
+app.use(require('connect-flash')()) //requires connect-flash, within an app.use function, it is now accessible throughout the app
+app.use(function(req, res, next){ //app.use is applied and a function is passed as a parameter. The function accepts the req, res and next objects as parameters
+  res.locals.messages = require('express-messages')(req, res)//express-messages is required as a function. It accepts the req, res obj as params. functionality is assigned to the res obj using
+  //locals option and a name of "messages". Allows any message to be stored into the response, making it available in a view.
+  next()//calls "next()" function, passing control to the next piece of middleware in the app. This allows messages to be set, then pass on to the next process. When a view
+  //is built, the message can be displayed in it.
+})
+
 
 /* ***********************
  * View Engine and Templates
@@ -30,6 +57,7 @@ app.use(static)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
 app.use("/inv", utilities.handleErrors(inventoryRoute))
+app.use("/account",utilities.handleErrors(accountRoute))
 // Error route
 app.use("/", utilities.handleErrors(errorRoute))
 // Route to cause 500 error
