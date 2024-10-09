@@ -342,7 +342,61 @@ footer p a:hover {
   color: var(--accent2);
 }
 
+/* Login page styling */
+.login-form-container {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
 
+.login {
+  background-color: var(--accent2);
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 400px;
+  box-shadow: var(--box-shadow);
+}
+
+.login fieldset {
+  height: 275px;
+  width: 275px;
+  border-color: var(--font-color-on-color);
+  border-radius: 5px;
+}
+
+.form-group .above {
+  display: block;
+  margin-bottom: 1.5%;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.form-group input {
+  width: 80%;
+  padding: .5rem;
+  margin-bottom: .5rem;
+  box-sizing: border-box;
+}
+
+.login button {
+  text-align: center;
+  width: 5rem;
+  height: 2rem;
+  border-radius: 5px;
+  margin-left: 26%;
+  margin-top: 1.5%;
+}
+
+.login h2 {
+  margin-left: 10%;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.login h2 a {
+  color: var(--main-font-color);
+  font-weight: bold;
+}
 
 
 
