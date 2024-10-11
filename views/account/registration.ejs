@@ -4,3 +4,51 @@
     <% } else {
       res.redirect('/')
     } %>
+
+<%# Flash message %>
+<%- messages() %>
+<% if (errors) { %> <!--EJS code block contianing "if" control to detect if an error variable exists and is not null-->
+  <ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
+    <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
+      <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
+<% }) %>
+  </ul>
+<% } %>
+
+<%# Login Form %>
+<div class="registration-form-container">
+  <form class="registration"action="/account/registration" method="post"> <!--action - the path to be processed by the route. method - 'post' the manner which the data is being sent to the server-->
+      <fieldset>
+          <div class="registration-form-group">
+            <label class="above" for="firstName">First name:</label>
+            <input type="text" id="firstName" name="account_firstname" required value="<%= locals.account_firstname %>"">        
+          </div>
+  
+          <div class="registration-form-group">
+            <label class="above" for="lastName" >Last name:</label>
+            <input type="text" id="lastName" name="account_lastname" required value="<%= locals.account_lastname %>"">
+          </div>
+
+          <div class="registration-form-group">
+            <label class="above" for="email" >Email:</label>
+            <input type="email" id="email" name="account_email" placeholder="Enter a valid email address" required value="<%= locals.account_email %>">
+          </div>
+
+          <div class="registration-form-group">
+            <label class="above" for="password" >Password:</label>
+            <input type="password" id="password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required>
+          </div>
+
+          <div class="password-requirements">
+          <p>Passwords must be at least 12 characters, one must be a number, one must be a lowercase letter, one must be a capital letter, and one must be a non-alphanumeric character."</p>
+          </div>
+          <button type="button" id="pswdbutton">Show Password</button>
+          <button type="submit" id="register">Register</button>
+         
+      </fieldset>
+      
+  </form>
+  </div>
+
+  <!--Link to togglePassword script-->
+  <script src="/js/pswdToggle.js"></script>
