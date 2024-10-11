@@ -6,7 +6,7 @@
  * Require Statements
  *************************/
 const session = require("express-session")
-const pool = require('./database/')
+const pool = require("./database/")
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
@@ -16,20 +16,21 @@ const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const errorRoute = require("./routes/errRoute")
 const accountRoute = require("./routes/accountRoute")
+const bodyParser = require("body-parser")
 const utilities = require("./utilities/")
 
-/* ***********************
+/* ***************************
  * Middleware
- * *********************** */
-app.use(session({ // invokes app.use applies what is being invoked throughout the entire application
-  store: new (require('connect-pg-simple')(session))({ //where session data will be stored. New session table created. { indicates a new object sent into the connectino with config info
-    createTableIfMissing: true,//tells the session to create a "session" table in the DB if it does not exist
-    pool, //uses the DB connection pool to interact with the DB server
-  }), //closes the config data object and the "new" session store creation function
-  secret: process.env.SESSION_SECRET,// indicates a "secret" name-value pair used to protect the session.
-  resave: true, //usually false, but need to resave the session table after each message because we are using "flash" messages
-  saveUninitialized: true, //Important to the creation process when the session is first created.
-  name: 'sessionId'// "name" assigned to the unique "id" created for each session. Session id will be stored in a cookie passes back and forth from server to browser to maintain "state".
+ * *************************** */
+app.use(session({ // invokes the app.use() function and indicates the session is to be applied.
+  store: new (require('connect-pg-simple')(session))({ // store is referring to where the session data will be stored. A new table in the PostgreSQL database is created using "connect-pg-simple"
+    createTableIfMissing: true, // tells the session to create a "session" table in the db if it does not already exist
+    pool, // uses our db connection pool to interact with the db server
+  }),
+  secret: process.env.SESSION_SECRET, // indicates a "secret" name-value pair that will be used to protect the session.
+  resave: true, // This session for the session in the db is typically "false", But, because we are using "flash" mssg we need to resave the session table after each mssg, so it must be true
+  saveUninitialized: true, // This setting is important to the creation process when the session is first created.
+  name: 'sessionId', // This is the "name"  we are assigning to the unique "id" that will be created for each session.
 }))
 
 // Express Messages Middleware
@@ -40,6 +41,10 @@ app.use(function(req, res, next){ //app.use is applied and a function is passed 
   next()//calls "next()" function, passing control to the next piece of middleware in the app. This allows messages to be set, then pass on to the next process. When a view
   //is built, the message can be displayed in it.
 })
+
+// Body Parser
+app.use(bodyParser.json()) // tells express to use body parser to work with JSON data
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 
 /* ***********************
@@ -56,8 +61,9 @@ app.use(static)
 // Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
-app.use("/inv", utilities.handleErrors(inventoryRoute))
-app.use("/account",utilities.handleErrors(accountRoute))
+app.use("/inv", require("./routes/inventoryRoute"))
+// Account routes
+app.use("/account", require("./routes/accountRoute"))
 // Error route
 app.use("/", utilities.handleErrors(errorRoute))
 // Route to cause 500 error
@@ -80,12 +86,13 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  
   if(err.status == 404){
     message = err.message || 'Page not found.'
     image = "./images/errors/alien-phon-home.jpg"
   } else if(err.status == 500) {
     message = 'Oh no! There was a crash. Maybe try a different route?'
-    image = "./images/errors/car-crash.webp"
+    image = "/images/errors/car-crash.webp"
   }
   res.render("errors/error", {
     title: err.status || ' 500 Server Error',
