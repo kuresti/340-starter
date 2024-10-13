@@ -3,7 +3,7 @@
  * ******************************* */
 const accountModel = require("../models/account-model")
 const utilities = require(".") // require the utilities > index.js file
-    const { body, validationResult } = require("express-validator") // require the express validator. This line contains two tools: body (allows validator to access body obj) and validationResult (contains all errors detected by validation process)
+const { body, validationResult } = require("express-validator") // require the express validator. This line contains two tools: body (allows validator to access body obj) and validationResult (contains all errors detected by validation process)
     const validate = {} // create a "validate" object
 
 /* *******************************
@@ -78,5 +78,56 @@ validate.checkRegData = async (req, res, next) => { // creates async, anonymous 
     }
     next() // if no errors are detected, the "next()" function is called, which allows the process to continue into the controller for the registration to be carried out.
 }
+
+/* ***********************************
+ * Login Data validation rules
+ * *********************************** */
+validate.loginRules = () => {
+    return [
+        // valid email is required
+        body("account_email")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isEmail()
+        .normalizeEmail()
+        .withMessage("A valid email is required."),
+
+        // password is required 
+        body("account_password")
+        .trim()
+        .notEmpty()
+        .isStrongPassword({
+            minLength: 12,
+            minLowercase: 1, 
+            minUppercase: 1, 
+            minNumbers: 1, 
+            minSymbols: 1,
+        })
+        .withMessage("Password does not meet requirements.")
+    ]
+}
+
+/* ************************************
+ * Check data and return errors or continue to registration
+ * ************************************ */
+validate.checkLoginData = async (req, res, next) => {
+    const { account_email } = req.body
+    let errors = []
+    errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        let nav = await utilities.getNav()
+        res.render("account/login", {
+            errors,
+            title: "Login",
+            nav,
+            account_email,
+        })
+        return
+    }
+    next()
+}
+
+
 
 module.exports = validate
