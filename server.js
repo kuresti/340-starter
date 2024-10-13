@@ -47,6 +47,12 @@ app.use(bodyParser.json()) // tells express to use body parser to work with JSON
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 
+
+
+
+
+
+
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -86,6 +92,9 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+
+  let message = "An unexpected error occurred."
+  let image = "/images/errors/car-crash.webp"
   
   if(err.status == 404){
     message = err.message || 'Page not found.'
@@ -94,12 +103,12 @@ app.use(async (err, req, res, next) => {
     message = 'Oh no! There was a crash. Maybe try a different route?'
     image = "/images/errors/car-crash.webp"
   }
-  res.render("errors/error", {
+  res.status(err.status ||500).render("errors/error", {
     title: err.status || ' 500 Server Error',
     message,
     image,
     nav
-  })
+  }) 
 })
 
 /* ***********************
