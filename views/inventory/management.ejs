@@ -1,0 +1,9 @@
+<%# Content Heading %>
+<% if (title) { %>
+    <h1 class="management-title"><%= title %></h1>
+    <% } else {
+      res.redirect('/')
+    } %>
+
+<%# Flash message %>
+<%- messages() %>
