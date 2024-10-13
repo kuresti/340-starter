@@ -2,13 +2,11 @@
  * Needed Resources
  * Account routes
  * ***************************** */
-const regValidate = require("../utilities/account-validation")
 const express = require("express")
 const router = new express.Router() 
 const accountController = require("../controllers/acctController")
 const utilities = require("../utilities")
-
-
+const regValidate = require("../utilities/account-validation")
 /* *****************************
  * Deliver Login View
  * ***************************** */
@@ -31,12 +29,22 @@ router.post( // Router object using a "post" property.
 )
 
 // Process the login attempt
-router.post( // has the router listening for a "post" request.
-    "/login", // indicates the route being watched for inside the post request.
-    (req, res) => { //an arrow function that accepts req, res obj as params
-        res.status(200).send('login process') //indicates that the req was successful and returns "login process"
+router.post(
+    "/login",
+    regValidate.loginRules(),
+    regValidate.checkLoginData,
+    (req, res) => {
+      res.status(200).send('login process')
     }
-)
+  )
+
+
+
+
+
+
+
+
 
 module.exports = router
 
