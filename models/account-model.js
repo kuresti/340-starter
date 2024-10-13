@@ -1,4 +1,5 @@
 const pool = require("../database/")
+const bcrypt = require("bcryptjs")
 
 /* **************************
  * Register new account
@@ -25,5 +26,14 @@ async function checkExistingEmail(account_email) {
         return error.message
     }
 }
+
+
+
+
+
+
+
+
+
 
 module.exports = { registerAccount, checkExistingEmail }
