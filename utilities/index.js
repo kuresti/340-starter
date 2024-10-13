@@ -63,7 +63,13 @@ Util.buildClassificationGrid = async function(data){
  * Wrap other function in this for 
  * General Error Handling
  **************************************** */
-Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+Util.handleErrors = fn => (req, res, next) => {
+  try {
+    return Promise.resolve(fn(req, res, next)).catch(next)
+  } catch (err) {
+    next(err)
+  }
+}
 
 /* ***************************************
  * Build the details view HTML
