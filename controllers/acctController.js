@@ -5,7 +5,6 @@ const utilities = require("../utilities/")
 const acctModel = require("../models/account-model")
 const bcrypt = require("bcryptjs")
 
-
 /* *************************** 
  * Deliver login view
  * *************************** */
@@ -57,7 +56,7 @@ async function registerAccount(req, res) { // begins async function and passing 
         hashedPassword //parameter being passed into the function
     )
 
-    if (regResult) { //opens if statement to determin if a result was received
+    if (regResult) { //opens if statement to determine if a result was received
         req.flash( //sets a flash message to be displayed.
             "notice",
             `congratulations, you\'re registered ${account_firstname}. Please log in.`
@@ -76,5 +75,15 @@ async function registerAccount(req, res) { // begins async function and passing 
         })
       }    
 }
+
+
+
+
+
+
+
+
+
+
 
 module.exports = { buildLogin, buildRegistration, registerAccount }
