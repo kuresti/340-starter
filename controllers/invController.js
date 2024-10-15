@@ -37,5 +37,123 @@ invCont.buildByInvId = async function (req, res, next) {
   })
 }
 
+/* ***************************
+ * Build Inventory Management View
+ * *************************** */
+invCont.buildInvManagement = async function (req, res, next) {
+  let nav = await utilities.getNav()
+  
+  res.render("inventory/management", {
+    title: "Inventory Management",
+    nav,
+  })
+}
+
+/* ****************************
+ * Deliver add-classificaton view
+ * **************************** */
+invCont.buildAddClassification = async function (req, res, next) {
+  let nav = await utilities.getNav()
+
+  res.render("inventory/add-classification", {
+    title: "Add Classification",
+    nav,
+    errors: null,
+  })
+    
+}
+
+/* *****************************
+ * Process classification_name DB insertion
+ * ***************************** */
+invCont.insertClassificationName = async function(req, res) {
+  let nav = await utilities.getNav()
+  const { classification_name } = req.body
+
+  const invResult = await invModel.postClassificationName( // calls the function, from model, uses "await" to indicate that result should be returned and wait until it arrives.
+    classification_name // parameter being passed into the function
+  )
+
+  if (!invResult) { //opens if statement to determine if a result was received
+    req.flash( //sets a flash message to be displayed.
+        "notice",
+        `congratulations,${classification_name} successfully inserted into the database`
+    )
+    return res.status(201).render("inventory/add-classification", { // calls render function to return the add-classification view with an HTTP 201 status for a successful insertion of data
+        title: "Add Classification",
+        nav,
+        errors: null,
+    })
+  } else { // closes the if block and opens the else block
+    req.flash("notice", "Sorry, the classification name failed to insert in database.") // calls render function, sends thr route to trigger a return to the add-classification view 
+    return res.status(501).render("inventory/add-classification", { //sends HTTP 501 status code. (not successful)
+        title: "Add Classification ",//elements of the data obj being sent to the view.
+        nav,
+        errors: null,
+    })
+  }      
+}
+
+/* ****************************
+ * Deliver add-invetory view
+ * **************************** */
+invCont.buildAddInventory = async function(req, res, next) {
+  let nav = await utilities.getNav()
+
+  let classificationList = await utilities.buildClassificationList()
+
+  res.render('inventory/add-inventory', {
+    title: "Add Vehicle Inventory",
+    nav,
+    classificationList,
+    errors: null,
+  })
+}
+
+/* *****************************
+ * Process add-inventory DB insertion
+ * ***************************** */
+invCont.insertAddInventory = async function(req, res) {
+  let nav = await utilities.getNav()
+  let classificationList = await utilities.buildClassificationList()
+  const { classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color } = req.body
+
+  const invResult = await invModel.postAddInventory( // calls the function, from model, uses "await" to indicate that result should be returned and wait until it arrives.
+    classification_id, // parameter being passed into the function
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+  )
+
+  if (!invResult) { //opens if statement to determine if a result was received
+    req.flash( //sets a flash message to be displayed.
+        "notice",
+        "Congratulations, vehicle has been successfully inserted into the database."
+    )
+    return res.status(201).render("inventory/add-inventory", { // calls render function to return the add-inventory view with an HTTP 201 status for a successful insertion of data
+        title: "Add Inventory",
+        nav,
+        classificationList,        
+        errors: null,
+    })
+  } else { // closes the if block and opens the else block
+    req.flash("notice", "Sorry, the vehicle has failed to insert in database.") // calls render function, sends thr route to trigger a return to the add-classification view 
+    return res.status(501).render("inventory/add-inventory", { //sends HTTP 501 status code. (not successful)
+        title: "Add inventory ",//elements of the data obj being sent to the view.
+        nav,
+        classificationList,
+        errors: null,
+    })
+  }      
+}
+
+
+
 
 module.exports = invCont
