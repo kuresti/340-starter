@@ -1,0 +1,37 @@
+<%# Content Heading %>
+<% if (title) { %>
+    <h1 class="management-title"><%= title %></h1>
+    <% } else {
+      res.redirect('/')
+    } %>
+
+<%# Flash message %>
+<%- messages() %>
+<% if (errors) { %> <!--EJS code block contianing "if" control to detect if an error variable exists and is not null-->
+  <ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
+    <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
+      <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
+<% }) %>
+  </ul>
+<% } %>
+
+<%# Add new classification Form %>
+<div class="classification-form">
+    
+    <form action="/inv/add-classification" method="post"  class="add-classification">
+        <h2>FIELD IS REQUIRED</h2>
+        <fieldset>
+            
+           
+            <div class="new-classification">
+            <label class="above" for="classification-name">Classification name </label>
+            <h2>NAME MUST BE ALPHABETIC CHARACTERS ONLY.</h2>
+            <input type="text" id="classification-name" name="classification_name" title="NAME MUST BE ALPHABETIC CHARACTERS ONLY." pattern="^[A-Za-z]+$" required >        
+            </div>
+            
+            <button type="submit">Add Classification</button>
+            
+        </fieldset>
+        
+    </form>
+    </div>
