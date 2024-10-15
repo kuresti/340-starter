@@ -98,7 +98,7 @@ app.use(async (err, req, res, next) => {
   
   if(err.status == 404){
     message = err.message || 'Page not found.'
-    image = "./images/errors/alien-phon-home.jpg"
+    image = "/images/errors/alien-phon-home.jpg"
   } else if(err.status == 500) {
     message = 'Oh no! There was a crash. Maybe try a different route?'
     image = "/images/errors/car-crash.webp"
