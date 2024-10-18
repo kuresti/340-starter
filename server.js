@@ -18,6 +18,10 @@ const errorRoute = require("./routes/errRoute")
 const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
 const utilities = require("./utilities/")
+const cookieParser = require("cookie-parser")
+
+
+
 
 /* ***************************
  * Middleware
@@ -46,6 +50,11 @@ app.use(function(req, res, next){ //app.use is applied and a function is passed 
 app.use(bodyParser.json()) // tells express to use body parser to work with JSON data
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
+// Cookie Parser
+app.use(cookieParser())
+
+// Check JWT Tokens
+app.use(utilities.checkJWTToken)
 
 
 
@@ -107,7 +116,7 @@ app.use(async (err, req, res, next) => {
     title: err.status || ' 500 Server Error',
     message,
     image,
-    nav
+    nav,
   }) 
 })
 
