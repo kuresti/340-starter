@@ -12,13 +12,19 @@ router.get("/type/:classificationId", utilities.handleErrors(invCont.buildByClas
 router.get("/details/:invId", utilities.handleErrors(invCont.buildByInvId));
 
 // Route to build inventory management view
-router.get("/management", utilities.handleErrors(invCont.buildInvManagement));
+router.get("/inventory-management", utilities.handleErrors(invCont.buildInvManagement));
 
 // Route to build add-classification view
 router.get("/add-classification", utilities.handleErrors(invCont.buildAddClassification));
 
 // Route to build add-inventory view
 router.get("/add-inventory", utilities.handleErrors(invCont.buildAddInventory))
+
+// Route to getInventory
+router.get("/getInventory/:classification_id", utilities.handleErrors(invCont.getInventoryJson))
+
+// Route to build delete confirmation by invId vew
+router.get("/delete/:invId", utilities.handleErrors(invCont.buildDeleteByInvId))
 
 // Insert new classification to the DB
 router.post(
@@ -34,6 +40,12 @@ router.post(
     invValidate.addInventoryRules(),
     invValidate.checkAddInventoryData,
     utilities.handleErrors(invCont.insertAddInventory)
+)
+
+// delete
+router.post(
+    "/delete",
+    utilities.handleErrors(invCont.deleteInventory)
 )
 
 module.exports = router;
