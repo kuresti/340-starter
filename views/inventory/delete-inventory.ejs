@@ -1,0 +1,52 @@
+<%# Content Heading %>
+<% if (title) { %>
+    <h1 class="management-title"><%= title %></h1>
+    <% } else {
+      res.redirect('/')
+    } %>
+
+<%# Flash message %>
+<%- messages() %>
+<% if (errors) { %> <!--EJS code block contianing "if" control to detect if an error variable exists and is not null-->
+  <ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
+    <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
+      <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
+<% }) %>
+  </ul>
+<% } %>
+
+<%# Add Inventory Form %>
+<div class="add-inventory-form-container">
+    <form class="delete-inventory" action="/inv/delete" method="post"> <!--action - the path to be processed by the route. method - 'post' the manner which the data is being sent to the server-->
+        <h1>Confirm Deletion -  The delete is permanent.</h1>
+        <fieldset>           
+    
+            <div class="delete-inventory">
+              <label class="above" for="inv-make" >Inventory Make:</label>
+              <input type="text" id="inv-make" name="inv_make" readonly value="<%= locals.inv_make %>">
+            </div>
+  
+            <div class="delete-inventory-form-group">
+              <label class="above" for="inv-model" >Inventory Model:</label>
+              <input type="text" id="inv-model" name="inv_model" readonly value="<%= locals.inv_model %>">
+            </div>
+  
+            <div class="delete-inventory-form-group">
+              <label class="above" for="inv-year" >Inventory Year:</label>
+              <input type="number" id="inv-year" name="inv_year" readonly value="<%= locals.inv_year %>">
+            </div>
+            
+
+            <div class="delete-inventory-form-group">
+                <label class="above" for="inv-price" >Inventory Price:</label>
+                <input type="number" id="inv-price" name="inv_price"  readonly value="<%= locals.inv_price %>">
+            </div>           
+            
+          
+            <button type="submit" id="delete">Delete</button>
+            <input type="hidden" name="inv_id" value="<%= locals.inv_price %>">
+           
+        </fieldset>
+        
+    </form>
+    </div>
