@@ -4,6 +4,8 @@
 const utilities = require("../utilities/")
 const acctModel = require("../models/account-model")
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 /* *************************** 
  * Deliver login view
@@ -76,6 +78,59 @@ async function registerAccount(req, res) { // begins async function and passing 
       }    
 }
 
+/* *******************************
+ * Process login request
+ * ******************************* */
+async function accountLogin(req, res) { // opens async function and accepts req and res as parameters
+    let nav = await utilities.getNav() // builds the nav bar for use in views
+    const { account_email, account_password } = req.body // collects incoming data from the reqest body
+    const accountData = await acctModel.getAccountByEmail(account_email) // makes a call to a mode-based function to locate data associated with an existing email. If any returned data it is stored in "accountData"
+    
+    if (!accountData) { // An "if" to test if nothing was returned
+        req.flash("notice", "Please check your credentials and try again.") // If the variable is empty, a message is sent
+        return res.status(400).render("account/login", { // Response obj is used to  return the login view to the browser
+            title: "Login", // data to be returned to the view
+            nav,
+            errors: null,
+            account_email,
+        }) // Closes data and render obj
+    } // Ends the if test
+  try{ // opens try-catch block
+   const passwordMatch = await bcrypt.compare(account_password, accountData.account_password) // passing response from bcrypt.compare into passwordMatch variable
+   if (!passwordMatch) { // "if" statement to test if the passwordMatch returned anything
+   req.flash("notice", "Please check your credentials and try again.") // If the variable is false a flash message will be sent
+   return res.status(400).render("account/login", { // Renders the login view
+    title: "Login",// data returned to the view
+    nav,
+    errors: null,
+    account_email,
+   })
+   }
+   delete accountData.account_password // If the passwords match the hashed password will be deleted with JS delete
+   const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600}) // creates a JWT token
+   if (process.env.NODE.ENV === 'development') { // "If" statement to test if the environment is 'development'
+    res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000}) // If it is the 'development' environment then the cookie is passed only thorugh HTTP protocol
+   } else {
+    res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 *1000}) // If it is the 'production' environment then the cookie is passed only through HTTPS
+   }
+   return res.redirect("/account/account-management")
+} catch (error) {
+   return new Error('Access Forbidden')  
+ }
+} // Ends the function
+
+/* ********************************* 
+ * Build account management view
+ * ********************************* */
+async function buildAccountManagement(req, res, next) {
+    let nav = await utilities.getNav()
+    res.render("account/account-management", {
+        title: "Account Management", 
+        nav,
+        errors: null,
+    })
+
+}
 
 
 
@@ -83,7 +138,4 @@ async function registerAccount(req, res) { // begins async function and passing 
 
 
 
-
-
-
-module.exports = { buildLogin, buildRegistration, registerAccount }
+module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildAccountManagement }
