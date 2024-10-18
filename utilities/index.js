@@ -1,5 +1,10 @@
+/* *********************************
+ * Required resources
+ * ********************************* */
 const invModel = require("../models/inventory-model")
 const Util = {}
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 
 /* ************************
  * Constructs the nav HTML unordered list
@@ -112,6 +117,29 @@ Util.buildInvItemDetails = async function(data) {
   }
   return grid
 }
+
+/* ***************************************
+ * Middleware to check token validity
+ * *************************************** */
+Util.checkJWTToken = (req, res, next) => { // begins function and assigns it to "checkJWTToken"property of Util obj. Function accepts the req, res, next parameters.
+  if (req.cookies.jwt) { // an "if" check to see if the JWT cookie exists.
+    jwt.verify( // if cookie exists, uses the jsonwebtoken "verify"fn to check the validity of the token. Takes three args 1)token from the cookie 2)secret value in env 3)callback function
+      req.cookies.jwt, // the JWT token from the cookie
+      process.env.ACCESS_TOKEN_SECRET, // the "secret" which is stored in the .env file
+      function (err, accountData) { // the callback function (which returns an error or the account data from the token payload)
+        if (err) { // and "if" to see if an error exists
+          req.flash("Please log in") // if token is not valid, a flash mssg is created.
+          res.clearCookie('jwt') // the cookie is deleted.
+          return res.redirect('/account/login') // redirects to the "login" route, so the client can "login".
+        } // ends the "if" statement
+        res.locals.accountData = accountData // add teh accountData obj to the response.locals obj to be forwarded on through the rest of this request -response cycle.
+        res.locals.loggedin = 1 // adds "loggedin" flag with a value of "1" (true) to the response.locals obj to be forwarded on to the rest of this request-response cycle.
+        next() // next function directing Express server to move to the next step in the application's work flow.
+      }) // ends the callback function and the jwt.verify function.
+  } else { // ends the "if" statment and begins and "else" block
+    next() // Calls the next fn, to move forward in the app process. In this case, there is no JWT cookie, so the process moves to the next step.
+  } // ends the else block
+} // ends the function
 
 
 module.exports = Util
