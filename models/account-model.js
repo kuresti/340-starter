@@ -27,6 +27,19 @@ async function checkExistingEmail(account_email) {
     }
 }
 
+/* ***************************
+ * Return account data using email address
+ * *************************** */
+async function getAccountByEmail (account_email) { // creats the async function and adds the client_email as a parameter
+    try { // begins a try-catch block
+        const result = await pool.query( // creates a variable to store the results of the query.
+            'SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_email = $1', // SQL SELECT query. first arg in the pool.query function
+            [account_email])// passes in the client_email, as an array element to replace the placeholder of the SQL statement. Second arg in the pool.query
+            return result.rows[0] //sends the first records, from the result set returned by the query, back to where this function was called.
+    } catch (error) { // ends the "try" block and begins the "catch" block, with the "error" variable to store any errors that are thrown by the "try" block.
+        return new Error("No matching email found") // sends an error, if any, to the console for review.
+    }
+}
 
 
 
@@ -36,4 +49,5 @@ async function checkExistingEmail(account_email) {
 
 
 
-module.exports = { registerAccount, checkExistingEmail }
+
+module.exports = { registerAccount, checkExistingEmail, getAccountByEmail}
