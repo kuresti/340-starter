@@ -42,10 +42,11 @@ invCont.buildByInvId = async function (req, res, next) {
  * *************************** */
 invCont.buildInvManagement = async function (req, res, next) {
   let nav = await utilities.getNav()
-  
-  res.render("inventory/management", {
+  const classificationSelect = await utilities.buildClassificationList()
+  res.render("inventory/inventory-management", {
     title: "Inventory Management",
     nav,
+    classificationSelect,
   })
 }
 
@@ -152,6 +153,19 @@ invCont.insertAddInventory = async function(req, res) {
     })
   }      
 }
+
+/* *****************************
+ * Return Inventory by Classification As JSON
+ * ***************************** */
+invCont.getInventoryJSON = async (req, res, next) => { // The opening of the function.
+  const classification_id = parseInt(req.params.classification_id) // collects and stores the classification_id that has been passed as a parameter through the URL. Uses the JavaScript parseInt() to cast it as an integer, which is also a security step.
+  const invData = await invModel.getInventoryByClassificationId(classification_id) // calls the model-based function to get the data based on the classification_id.
+  if (invData[0].inv_id) { // checks to make sure there is a value in the first element of the array being returned.
+    return res.json(invData) // if data is present, returns the result set as a JSON object.
+  } else { // ends the "if" check and opens and "else" 
+    next(new Error("No data returned")) // throws an error for the Express error handler if no data is found.
+  } // ends the "else" structure
+} // ends the function
 
 
 
