@@ -152,5 +152,37 @@ validate.checkAddInventoryData = async (req, res, next) => { // creates async, a
     next() // if no errors are detected, the "next()" function is called, which allows the process to continue into the controller for the registration to be carried out.
 }
 
+/* ***********************************
+ * Check update data and return errors or continue to insert data to DB
+ * *********************************** */
+validate.checkUpdateData = async (req, res, next) => { // creates async, anonymous function accepts(req, res, next) as params, assigns it to the "checkAddInventoryData" property of the validate object.
+    const { classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, inv_id } = req.body //uses JS destructuring method to collect and store firstname, lastname, email, and inId values from the request body.
+    let errors = [] // creates an empty "errors" array
+    errors = validationResult(req) // calls the express-validator "validationResult" function and sends the request obj that contains all incoming data as a parameter. If there are errors they are stored in the errors array.
+    if (!errors.isEmpty()) { // checks the errors array to see if any errors exist. 
+        let nav = await utilities.getNav() //calls for the nav bar to be queried and built.
+        let classificationList = await utilities.buildClassificationList(classification_id)
+        res.render("inventory/edit-inventory", { // calls the render function to rebuild the add-inventory view.
+            errors, // this and items below are sent back to the view.
+            title: "Modify " + itemName,
+            nav,
+            classificationList,
+            classification_id,
+            inv_make,
+            inv_model,
+            inv_year,
+            inv_description,
+            inv_image,
+            inv_thumbnail,
+            inv_price,
+            inv_miles,
+            inv_color,
+            inv_id,
+        })
+        return // the "return" command sends control of the process back to the application, so the view in the browser does not "hang".
+    }
+    next() // if no errors are detected, the "next()" function is called, which allows the process to continue into the controller for the registration to be carried out.
+}
+
 module.exports = validate
 
