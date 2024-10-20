@@ -1,10 +1,11 @@
 'use strict' // Tells the JavaScript parser to follow all rules strictly.
 
-// Get a list of items in inventory based on teh classification_id
+// Get a list of items in inventory based on tHE classification_id
 let classificationList = document.querySelector("#classificationList") // Finds the classification select element based on its ID, and stores its reference into a local variable.
 classificationList.addEventListener("change", function () { // Attaches the eventListener to classificationList and listens for any "change". When a "change" occurs an anonymous function is executed.
-    let classification_id = classificationList.ariaValueMaxconsole.log(`classification_id is: ${classification_id}`)// gets the new value from classification select element and stores it into a JS variable.
-    let classIdURL ="/inv/getInventory/"+classification_id // The URL used to request inv data from the invController. Uses classification_id
+    let classification_id = classificationList.value // Captures the new value from the classification select element and stores it into a JS variable
+    console.log(`classification_id is: ${classification_id}`)// logging the classification_id in the console for debugging
+    let classIdURL ="/inv/getInventory/"+ classification_id // The URL used to request inv data from the invController. Uses classification_id
     fetch(classIdURL) // Method of initiating an AJAX (asynchronous) request.
     .then(function (response) { // "then" method waits for data to be returned from fetch. The response is passed into an anonymous function for processing.
         if (response.ok) { // "if" test to see if the response was returned successfully. If not, the error occurs
@@ -33,9 +34,9 @@ function buildInventoryList(data) { // Declares teh function and indicates the J
     // Iterate over all vehicles in the array and put each in a row
     data.forEach(function (element){ // Implements the foreach method on the data obj. Each element in the obj is sent into an anonymous function as a parameter
         console.log(element.inv_id + ", " + element.inv_model); //Sends the name and id of each element to the console log for testing purposes.
-        dataTable += `<tr><td>${element.inv_make} ${element.inv_model}</td>`; // Creates a table cell with the vehicle name and appends it to the variable.
-        dataTable += `<td><a href='/inv/edit/${element.inv_id}' title='Click to update'>Modify</a></td>`; // Creates a table cell with a link to begin the update process for this item and appends it to the variable.
-        dataTable += `<td><a href='/inv/delete/${element.inv_id}' title='Click to delete'>Delete</a></td></tr>`; // Creates a table cell wiht a link to begin the delete process for this item and apends it to the variable.
+        dataTable += `<tr><td id="table-make-model">${element.inv_make} ${element.inv_model}</td>`; // Creates a table cell with the vehicle name and appends it to the variable.
+        dataTable += `<td class="inv-modify-button"><a href='/inv/edit-inventory/${element.inv_id}' title='Click to update'>Modify</a></td>`; // Creates a table cell with a link to begin the update process for this item and appends it to the variable.
+        dataTable += `<td class="inv-delete-button"><a href='/inv/delete/${element.inv_id}' title='Click to delete'>Delete</a></td></tr>`; // Creates a table cell wiht a link to begin the delete process for this item and apends it to the variable.
     }) // Ends teh forEach loop and its embeded anonymous function.
     dataTable += '<tbody>'; // Appends teh closing tbody element to the variable
     // Display the contents in the Inventory Management view
