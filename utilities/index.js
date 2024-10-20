@@ -141,5 +141,17 @@ Util.checkJWTToken = (req, res, next) => { // begins function and assigns it to 
   } // ends the else block
 } // ends the function
 
+/* ************************************
+ * Middleware Check Login
+ * ************************************ */
+Util.checkLogin = (req, res, next) => { // creates functio and assigns it to the "Util" obj with a name of "checkLogin". Passes req, res, next as parameters
+  if (res.locals.loggedin) { // an "if" check to see if the login flag exists and is "true" in the response object.
+    next() // allows the process of teh app to continue by using the "next()" function.
+  } else { //ends the "if" and begins an "else" block.
+    req.flash("notice", "Please log in.") // creates a flash message
+    return res.redirect("/account/login") // redirects the login route, because the login flag does not exist
+  } // ends the "else block"
+} // ends the function
+
 
 module.exports = Util
