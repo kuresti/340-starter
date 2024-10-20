@@ -1,0 +1,37 @@
+<%# Content Heading %>
+<% if (title) { %>
+    <h1 class="management-title"><%= title %></h1>
+    <% } else {
+      res.redirect('/')
+    } %>
+
+<%# Flash message %>
+<%- messages() %>
+<% if (errors) { %> <!--EJS code block contianing "if" control to detect if an error variable exists and is not null-->
+  <ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
+    <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
+      <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
+<% }) %>
+  </ul>
+<% } %>
+
+
+<div class="inv-management">
+    <div id="classification-link">
+    <!--Link to add a new classification-->
+    <a href="/inv/add-classification">Add New Classification</a>
+    </div>
+    <div id="add-new-inventory-link">
+    <!--Link to add new inventory-->
+    <a href="/inv/add-inventory">Add New Inventory</a>   
+    </div>
+</div>
+<div class="inv-manage-table">
+  <h2>Manage Inventory</h2>
+  <p>Select a classification from the list to see the items belonging to the classification</p>
+  <%- classificationSelect %>
+  <table id="inventory-display"></table>
+  <noscript>JavaScript must be enabled to use this page.</noscript>
+</div>
+
+<script src="../../js/inventory.js"></script>
