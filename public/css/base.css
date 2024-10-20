@@ -562,28 +562,115 @@ input:required:invalid,
   font-weight: bold;
 }
 
-/* Styling inv-management */
+/* Styling inventory management view */
 .inv-management {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: 200px; 
+  justify-items: center;
+  align-items: center;
+  border-radius: 5px;
+  border: solid 5px var(--font-color-on-color);
 }
 
 #classification-link a,
 #add-new-inventory-link a {  
-  font-size:1.5rem;
-  color: var(--main-font-color);
+  font-size:1.25rem;
+  color: var(--font-color-on-color);
   font-weight: 700;  
+  text-decoration: none;
+  padding: 10px;
+  text-align: center;
 }
 
-/* Add Inventory View Styling*/
-.add-inventory-form-container {
+#classification-link,
+#add-new-inventory-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  height: 2.5rem;
+  box-shadow: var(--box-shadow);
+}
+
+#classification-link {
+  margin-top: 10%;
+}
+
+#add-new-inventory-link {
+  margin-bottom: 25%;
+}
+
+.inv-manage-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: solid 5px var(--font-color-on-color);
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.inv-manage-table p {
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 10px;
+  margin-top: 0;
+}
+
+.inv-manage-table h2 {
+  margin-bottom: 0;
+  font-size: 1.5rem;  
+}
+
+#classificationList {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 1.25rem;
+}
+
+#inventory-display {
+  font-size: 1.5rem;
+}
+
+.inv-modify-button,
+.inv-delete-button {
+  background-color: var(--main-font-color);
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  height: 2.5rem;
+  box-shadow: var(--box-shadow);
+  padding: 7px;
+}
+
+.inv-modify-button a,
+.inv-delete-button a {
+  text-decoration: none;
+  color: var(--font-color-on-color);
+}
+
+.inv-delete-button {
+  margin-right: 5px;
+}
+
+#table-make-model {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Add Inventory and Edit inventory View Styling*/
+.add-inventory-form-container,
+.edit-inventory-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.add-inventory {
+.add-inventory,
+.edit-inventory {
   background-color: var(--accent2);
   padding: 20px;
   border-radius: 5px;
@@ -591,26 +678,36 @@ input:required:invalid,
   box-shadow: var(--box-shadow);
 }
 
-.add-inventory .above {
+.add-inventory .above,
+.edit-inventory .above {
   display: block;
   margin-bottom: 1.5%;
   font-weight: bold;
   font-size: 1.25rem;
 }
 
-.add-inventory input {
+.add-inventory input,
+.edit-inventory input {
   width: 80%;
   padding: .5rem;
   margin-bottom: .5rem;
   box-sizing: border-box;
+  border-radius: 5px;
 }
 
-.add-inventory fieldset {
+.add-inventory fieldset,
+.edit-inventory fieldset {
   border-color: var(--font-color-on-color);
   border-radius: 5px;
 }
 
-.add-inventory fieldset button {
+.add-inventory textarea,
+.edit-inventory textarea {
+  border-radius: 5px;
+}
+
+.add-inventory fieldset button,
+#update-button {
   text-align: center;
   width: 8rem;
   height: 2.25rem;
@@ -619,12 +716,16 @@ input:required:invalid,
   font-weight: bold;
 }
 
-.add-inventory select {
+.add-inventory select,
+.edit-inventory select {
   width: 80%;
   padding: .5rem;
   margin-bottom: .5rem;
   box-sizing: border-box;
 }
+
+
+
 
 
 
