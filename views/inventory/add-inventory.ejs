@@ -38,7 +38,7 @@
   
             <div class="add-inventory-form-group">
               <label class="above" for="inv-year" >Inventory Year:</label>
-              <input type="number" id="inv-year" name="inv_year" pattern="^(19|20\d{2}$)" required value="<%= locals.inv_year %>">
+              <input type="number" id="inv-year" name="inv_year"  required value="<%= locals.inv_year %>">
             </div>
 
             <div class="add-inventory-form-group">
@@ -50,22 +50,22 @@
 
             <div class="add-inventory-form-group">
                 <label class="above" for="inv-image" >Inventory Image:</label>
-                <input type="file" id="inv-image" name="inv_image"  accept="image/" value="<%- typeof image !== 'undefined' ? image : '/images/vehicles/no-image.png' %>" required>
+                <input type="text" id="inv-image" name="inv_image" value="<%- typeof image !== 'undefined' ? image : '/images/vehicles/no-image.png' %>" required>
             </div>
 
             <div class="add-inventory-form-group">
                 <label class="above" for="inv-thumbnail" >Inventory Thumbnail:</label>
-                <input type="file" id="inv-thumbnail" name="inv_thumbnail"  accept="image/" value="<%-typeof image !== 'undefined' ? image : '/images/vehicles/no-image-tn.png' %>" required>
+                <input type="text" id="inv-thumbnail" name="inv_thumbnail"  value="<%-typeof image !== 'undefined' ? image : '/images/vehicles/no-image-tn.png' %>" required>
             </div>
 
             <div class="add-inventory-form-group">
                 <label class="above" for="inv-price" >Inventory Price:</label>
-                <input type="number" id="inv-price" name="inv_price"  pattern="^\d+$" required value="<%= locals.inv_price %>">
+                <input type="number" id="inv-price" name="inv_price"   required value="<%= locals.inv_price %>">
             </div>
 
             <div class="add-inventory-form-group">
                 <label class="above" for="inv-mileage" >Inventory Mileage:</label>
-                <input type="text" id="inv-mileage" name="inv_miles"  pattern="^\d+$" required value="<%= locals.inv_miles %>">
+                <input type="number" id="inv-mileage" name="inv_miles"  required value="<%= locals.inv_miles %>">
             </div>
 
             <div class="add-inventory-form-group">
@@ -74,7 +74,7 @@
             </div>
   
           
-            <button type="submit" id="register">Register</button>
+            <button type="submit" id="add-inventory-button">Add Inventory</button>
            
         </fieldset>
         
