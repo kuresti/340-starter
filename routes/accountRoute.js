@@ -20,7 +20,7 @@ router.get("/registration", utilities.handleErrors(accountController.buildRegist
 /* ****************************
  * Deliver management view
  * **************************** */
-router.get("/account-management", utilities.handleErrors(accountController.buildAccountManagement))
+router.get("/account-management", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagement))
 
 /* ****************************
  * Process Registration
