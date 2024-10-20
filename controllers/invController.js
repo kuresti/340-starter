@@ -42,11 +42,12 @@ invCont.buildByInvId = async function (req, res, next) {
  * *************************** */
 invCont.buildInvManagement = async function (req, res, next) {
   let nav = await utilities.getNav()
-  const classificationSelect = await utilities.buildClassificationList()
-  res.render("inventory/inventory-management", {
+  let classificationSelect = await utilities.buildClassificationList()
+  res.render("./inventory/management", {
     title: "Inventory Management",
     nav,
     classificationSelect,
+    errors: null,
   })
 }
 
@@ -167,6 +168,104 @@ invCont.getInventoryJSON = async (req, res, next) => { // The opening of the fun
   } // ends the "else" structure
 } // ends the function
 
+/* ******************************
+ * Build Modify inventory view
+ * ****************************** */
+invCont.modifyInvView = async function(req, res, next) {
+  const inv_id = req.params.invId
+  let nav = await utilities.getNav()
+  const itemData = await invModel.getInvItemByInvId(inv_id)
+  console.log(itemData)
+  let classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+  res.render('./inventory/edit-inventory', {
+    title: "Modify " + itemName,
+    nav,
+    classificationSelect,
+    errors: null,
+    inv_id: itemData.inv_id,
+    inv_make: itemData.inv_make,
+    inv_model: itemData.inv_model,
+    inv_year: itemData.inv_year,
+    inv_description: itemData.inv_description,
+    inv_image: itemData.inv_image,
+    inv_thumbnail: itemData.inv_thumbnail,
+    inv_price: itemData.inv_price,
+    inv_miles: itemData.inv_miles,
+    inv_color: itemData.inv_color,
+    classification_id: itemData.classification_id,
+  })
+}
+
+/* *****************************
+ * Update Inventory Data
+ * ***************************** */
+invCont.updateInventory = async function(req, res, next) {
+  let nav = await utilities.getNav()
+  const classificationSelect = await utilities.buildClassificationList()
+  const { inv_id, 
+          inv_make, 
+          inv_model, 
+          inv_year, 
+          inv_description, 
+          inv_image, 
+          inv_thumbnail, 
+          inv_price, 
+          inv_miles,
+          inv_color, 
+          classification_id 
+        } = req.body
+
+  const updateResult =  await invModel.updateInventory(
+          inv_id,
+          inv_make,
+          inv_model,
+          inv_description,
+          inv_image,
+          inv_thumbnail,
+          inv_price,
+          inv_year,
+          inv_miles,
+          inv_color,
+          classification_id
+        )
+
+        if (updateResult) { //opens if statement to determine if a result was received
+          const itemName = updateResult.inv_make + " " + updateResult.inv_model
+          req.flash( //sets a flash message to be displayed.
+              "notice",
+              `The ${itemName} was successfully updated.` 
+          )
+          return res.status(201).render("./inventory/management", { // calls render function to return the inventory management view with an HTTP 201 status for a successful insertion of data
+              title:  "Inventory Management",
+              nav,  
+              classificationSelect,      
+              errors: null,
+          })
+        } else { // closes the if block and opens the else block
+          req.flash("notice", "Sorry, the insert failed") // calls render function, sends the route to trigger a return to the add-classification view 
+          const itemName = updateResult.inv_make + " " + updateResult.inv_model
+          const itemData = await invModel.getInvItemByInvId(inv_id)
+          const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
+          return res.status(501).render("inventory/edit-inventory", { //sends HTTP 501 status code. (not successful)
+              title: "Modify " + itemName,//elements of the data obj being sent to the view.
+              nav,
+              classificationSelect: classificationSelect,
+              errors: null,
+              inv_id,
+              inv_make,
+              inv_model,
+              inv_year,
+              inv_description,
+              inv_image,
+              inv_thumbnail,
+              inv_price, 
+              inv_miles,
+              inv_color,
+              classification_id
+          })
+        }      
+}
 
 
 
