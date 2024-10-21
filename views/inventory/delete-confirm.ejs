@@ -1,0 +1,56 @@
+<%# Content Heading %>
+<% if (title) { %>
+    <h1 class="management-title"><%= title %></h1>
+    <% } else {
+      res.redirect('/')
+    } %>
+
+<%# Flash message %>
+<%- messages() %>
+<% if (errors) { %> <!--EJS code block contianing "if" control to detect if an error variable exists and is not null-->
+  <ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
+    <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
+      <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
+<% }) %>
+  </ul>
+<% } %>
+
+<%# Delete Inventory Form %>
+<div class="delete-inventory-form-container">
+    <form class="delete-inventory" id="deleteForm" action="/inv/delete-confirm" method="post"> <!--action - the path to be processed by the route. method - 'post' the manner which the data is being sent to the server-->
+        <h2>Confirm Deletion - This delete is permanent.</h2>
+        <fieldset>
+                
+            <div class="delete-inventory-form-group">
+              <label class="above" for="inv-make" >Inventory Make:</label>
+              <input type="text" id="inv-make" name="inv_make" readonly <% if(locals.inv_make) { %> value="<%= locals.inv_make %>"<% } %>>
+            </div>
+  
+            <div class="delete-inventory-form-group">
+              <label class="above" for="inv-model" >Inventory Model:</label>
+              <input type="text" id="inv-model" name="inv_model" readonly <% if(locals.inv_model) { %> value="<%= locals.inv_model %>"<% } %>>
+            </div>
+
+            <div class="delete-inventory-form-group">
+                <label class="above" for="inv-price" >Inventory Price:</label>
+                <input type="number" id="inv-price" name="inv_price" readonly <% if(locals.inv_price) { %> value="<%= locals.inv_price %>"<% } %>>
+            </div>  
+  
+            <div class="delete-inventory-form-group">
+              <label class="above" for="inv-year" >Inventory Year:</label>
+              <input type="number" id="inv-year" name="inv_year" readonly <% if(locals.inv_year) { %> value="<%= locals.inv_year %>"<% } %>>
+            </div>
+
+           
+          
+            <button id="delete-button">Delete</button>
+            <input type="hidden" name="inv_id"
+            <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+            <% } %>>
+           
+        </fieldset>
+        
+    </form>
+    </div>
+    
+   
