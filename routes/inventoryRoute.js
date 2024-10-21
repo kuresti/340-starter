@@ -15,19 +15,19 @@ router.get("/details/:invId", utilities.handleErrors(invCont.buildByInvId));
 router.get("/management", utilities.handleErrors(invCont.buildInvManagement));
 
 // Route to build add-classification view
-router.get("/add-classification", utilities.handleErrors(invCont.buildAddClassification));
+router.get("/add-classification", utilities.checkAccountType, utilities.handleErrors(invCont.buildAddClassification));
 
 // Route to build add-inventory view
-router.get("/add-inventory", utilities.handleErrors(invCont.buildAddInventory))
+router.get("/add-inventory", utilities.checkAccountType, utilities.handleErrors(invCont.buildAddInventory))
 
 // Route to getInventory
 router.get("/getInventory/:classification_id", utilities.handleErrors(invCont.getInventoryJSON))
 
 // Route to build modifyInventory
-router.get("/edit-inventory/:invId", utilities.handleErrors(invCont.modifyInvView))
+router.get("/edit-inventory/:invId", utilities.checkAccountType, utilities.handleErrors(invCont.modifyInvView))
 
 // Route to build delete confirmation by invId vew
-router.get("/delete/:invId", utilities.handleErrors(invCont.buildDeleteByInvId))
+router.get("/delete-confirm/:invId", utilities.checkAccountType, utilities.handleErrors(invCont.buildDeleteByInvId))
 
 // Insert new classification to the DB
 router.post(
@@ -55,7 +55,7 @@ router.post(
 
 // delete
 router.post(
-    "/delete",
+    "/delete-confirm",
     utilities.handleErrors(invCont.deleteInventory)
 )
 
