@@ -663,14 +663,16 @@ input:required:invalid,
 
 /* Add Inventory and Edit inventory View Styling*/
 .add-inventory-form-container,
-.edit-inventory-form-container {
+.edit-inventory-form-container,
+.delete-inventory-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .add-inventory,
-.edit-inventory {
+.edit-inventory,
+.delete-inventory {
   background-color: var(--accent2);
   padding: 20px;
   border-radius: 5px;
@@ -679,7 +681,8 @@ input:required:invalid,
 }
 
 .add-inventory .above,
-.edit-inventory .above {
+.edit-inventory .above,
+.delete-inventory .above {
   display: block;
   margin-bottom: 1.5%;
   font-weight: bold;
@@ -687,7 +690,8 @@ input:required:invalid,
 }
 
 .add-inventory input,
-.edit-inventory input {
+.edit-inventory input,
+.delete-inventory input {
   width: 80%;
   padding: .5rem;
   margin-bottom: .5rem;
@@ -696,7 +700,8 @@ input:required:invalid,
 }
 
 .add-inventory fieldset,
-.edit-inventory fieldset {
+.edit-inventory fieldset,
+.delete-inventory fieldset {
   border-color: var(--font-color-on-color);
   border-radius: 5px;
 }
@@ -707,7 +712,8 @@ input:required:invalid,
 }
 
 .add-inventory fieldset button,
-#update-button {
+#update-button,
+#delete-button {
   text-align: center;
   width: 8rem;
   height: 2.25rem;
