@@ -36,7 +36,7 @@ function buildInventoryList(data) { // Declares teh function and indicates the J
         console.log(element.inv_id + ", " + element.inv_model); //Sends the name and id of each element to the console log for testing purposes.
         dataTable += `<tr><td id="table-make-model">${element.inv_make} ${element.inv_model}</td>`; // Creates a table cell with the vehicle name and appends it to the variable.
         dataTable += `<td class="inv-modify-button"><a href='/inv/edit-inventory/${element.inv_id}' title='Click to update'>Modify</a></td>`; // Creates a table cell with a link to begin the update process for this item and appends it to the variable.
-        dataTable += `<td class="inv-delete-button"><a href='/inv/delete/${element.inv_id}' title='Click to delete'>Delete</a></td></tr>`; // Creates a table cell wiht a link to begin the delete process for this item and apends it to the variable.
+        dataTable += `<td class="inv-delete-button"><a href='/inv/delete-confirm/${element.inv_id}' title='Click to delete'>Delete</a></td></tr>`; // Creates a table cell wiht a link to begin the delete process for this item and apends it to the variable.
     }) // Ends teh forEach loop and its embeded anonymous function.
     dataTable += '<tbody>'; // Appends teh closing tbody element to the variable
     // Display the contents in the Inventory Management view
