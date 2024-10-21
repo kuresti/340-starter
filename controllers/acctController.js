@@ -85,7 +85,8 @@ async function accountLogin(req, res) { // opens async function and accepts req 
     let nav = await utilities.getNav() // builds the nav bar for use in views
     const { account_email, account_password } = req.body // collects incoming data from the reqest body
     const accountData = await acctModel.getAccountByEmail(account_email) // makes a call to a mode-based function to locate data associated with an existing email. If any returned data it is stored in "accountData"
-    
+   
+
     if (!accountData) { // An "if" to test if nothing was returned
         req.flash("notice", "Please check your credentials and try again.") // If the variable is empty, a message is sent
         return res.status(400).render("account/login", { // Response obj is used to  return the login view to the browser
