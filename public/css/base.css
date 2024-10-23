@@ -63,11 +63,32 @@ p {
   color: var(--main-font-color);
 }
 
+.welcome-header {
+  font-weight: 500;
+  color: var(--main-font-color);
+  font-size: 1em;
+}
+
+#welcome-link,
+#logout-link {
+  text-decoration: none;
+  font-size: 1em;
+  font-weight: 500;
+  color: var(--main-font-color);
+}
+
+#welcome-link a:hover,
+#logout-link a:hover {
+  background-color: var(--accent2);
+}
+
+
+
+/*Styling of Navigation*/
 nav {
   background-color: var(--primary-color);
 }
 
-/*Styling of Navigation*/
 nav ul {
   display: flex;
   justify-content: center;
@@ -661,18 +682,29 @@ input:required:invalid,
   font-weight: bold;
 }
 
-/* Add Inventory and Edit inventory View Styling*/
+/* ****************************************************
+ * Add Inventory, Edit inventory, Account Update, 
+ * Change Password View Styling
+ * ****************************************************/
 .add-inventory-form-container,
 .edit-inventory-form-container,
-.delete-inventory-form-container {
+.delete-inventory-form-container,
+.account-update-form-container,
+.change-password-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.account-update-form-container {
+  margin-bottom: 20px;
+}
+
 .add-inventory,
 .edit-inventory,
-.delete-inventory {
+.delete-inventory,
+.account-update,
+.change-password {
   background-color: var(--accent2);
   padding: 20px;
   border-radius: 5px;
@@ -682,7 +714,9 @@ input:required:invalid,
 
 .add-inventory .above,
 .edit-inventory .above,
-.delete-inventory .above {
+.delete-inventory .above,
+.account-update .above,
+.change-password .above {
   display: block;
   margin-bottom: 1.5%;
   font-weight: bold;
@@ -691,7 +725,9 @@ input:required:invalid,
 
 .add-inventory input,
 .edit-inventory input,
-.delete-inventory input {
+.delete-inventory input,
+.account-update input,
+.change-password input {
   width: 80%;
   padding: .5rem;
   margin-bottom: .5rem;
@@ -701,7 +737,9 @@ input:required:invalid,
 
 .add-inventory fieldset,
 .edit-inventory fieldset,
-.delete-inventory fieldset {
+.delete-inventory fieldset,
+.account-update fieldset,
+.change-password fieldset {
   border-color: var(--font-color-on-color);
   border-radius: 5px;
 }
@@ -713,9 +751,19 @@ input:required:invalid,
 
 .add-inventory fieldset button,
 #update-button,
-#delete-button {
+#delete-button,
+#account-update {
   text-align: center;
   width: 8rem;
+  height: 2.25rem;
+  border-radius: 5px;
+  display: block;
+  font-weight: bold;
+}
+
+.change-password fieldset button {
+  text-align: center;
+  width: 8.5rem;
   height: 2.25rem;
   border-radius: 5px;
   display: block;
@@ -728,6 +776,31 @@ input:required:invalid,
   padding: .5rem;
   margin-bottom: .5rem;
   box-sizing: border-box;
+}
+
+.password-requirements {
+  font-weight: bold;
+}
+
+/*Account Management Styling*/
+.update-account,
+.management-inv {  
+  height: 3em;
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  border-radius: 5px;
+  width: 250px;
+}
+
+.update-account a,
+.management-inv a{
+  color: var(--font-color-on-color);
+  text-decoration: none;
+  padding: 2em;
+  font-size: 1em;
+  border: none;
 }
 
 
