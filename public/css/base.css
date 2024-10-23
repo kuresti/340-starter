@@ -355,7 +355,18 @@ img.alien {
 /* Error Link in footer styling */
 .footer-container {
   background-color: white;
-}
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  width: 110vh;
+  height: auto;
+  padding: 4%;
+  padding-bottom: 0;
+  border: 7px solid var(--accent2);
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+    }
+
 footer p a {
   color: var(--main-font-color);
   font-size: 1.5em;
