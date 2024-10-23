@@ -56,13 +56,6 @@ app.use(cookieParser())
 // Check JWT Tokens
 app.use(utilities.checkJWTToken)
 
-
-
-
-
-
-
-
 /* ***********************
  * View Engine and Templates
  *************************/
