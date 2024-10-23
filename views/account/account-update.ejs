@@ -1,0 +1,75 @@
+<%# Content Heading %>
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else {router.get("/account-update/:accountId")
+      res.redirect('/')
+    } %>
+
+<%# Flash message %>
+<%- messages() %>
+<% if (errors) { %> <!--EJS code block contianing "if" control to detect if an error variable exists and is not null-->
+  <ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
+    <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
+      <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
+<% }) %>
+  </ul>
+<% } %>
+
+<!--Account Update Form-->
+<div class="account-update-form-container">
+    <form class="account-update" action="/account/account-update/" method="post"> <!--action - the path to be processed by the route. method - 'post' the manner which the data is being sent to the server-->
+        <h2>Account Update Form</h2>
+        <fieldset>
+            <div class="account-update-form-group">
+              <label class="above" for="firstName">First name:</label>
+              <input type="text" id="firstName" name="account_firstname" required value="<%= locals.account_firstname %>"">        
+            </div>
+    
+            <div class="account-update-form-group">
+              <label class="above" for="lastName" >Last name:</label>
+              <input type="text" id="lastName" name="account_lastname" required value="<%= locals.account_lastname %>"">
+            </div>
+  
+            <div class="account-update-form-group">
+              <label class="above" for="email" >Email:</label>
+              <input type="email" id="email" name="account_email" placeholder="Enter a valid email address" required value="<%= locals.account_email %>">
+            </div>
+  
+            <button type="submit" id="account-update">Account Update</button>
+            <input type="hidden" name="account_id"
+            <% if(locals.account_id) { %> value="<%= locals.account_id %>"
+            <% } %>>
+        </fieldset>        
+    </form>
+    </div>
+    
+    <!--Change Password Form-->
+    <div class="change-password-form-container">
+        <form class="change-password" action="/account/account-update/password" method="post">
+            <fieldset>
+               
+            <div class="change-password-form-group">
+                <label class="above" for="password" >New Password:</label>
+                <input type="password" id="password" name="account_password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required>
+              </div>
+    
+              <div class="password-requirements">
+              <p>Enterings a password will change your current password. <br> Passwords must be at least 12 characters, one must be a number, one must be a lowercase letter, one must be a capital letter, and one must be a non-alphanumeric character."</p>
+              </div>
+           
+              <button type="submit" >Change Password</button>
+              <input type="hidden" name="account_id"
+            <% if(locals.account_id) { %> value="<%= locals.account_id %>"
+            <% } %>>
+            <input type="hidden" name="account_firstname" 
+               <% if(locals.account_firstname) {%> value="<%= locals.account_firstname %>"
+               <% } %>
+            <input type="hidden" name="account_lastname"
+               <% if(locals.account_lastname) {%> value="<%= locals.account_lastname %>"
+               <% } %>
+            <input type="hidden" name="account_email"
+               <% if(locals.account_email) {%> value="<%= locals.account_email %>"
+               <% } %>
+            </fieldset>
+        </form>
+    </div>
