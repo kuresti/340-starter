@@ -5,6 +5,7 @@ const utilities = require("../utilities/")
 const acctModel = require("../models/account-model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const { validationResult } = require("express-validator")
 require("dotenv").config()
 
 /* *************************** 
@@ -125,18 +126,158 @@ async function accountLogin(req, res) { // opens async function and accepts req 
  * ********************************* */
 async function buildAccountManagement(req, res, next) {
     let nav = await utilities.getNav()
+
+    const accountData = res.locals.accountData
+    console.log(accountData)
     res.render("account/account-management", {
         title: "Account Management", 
         nav,
         errors: null,
     })
-
 }
 
+/* ***********************************
+ * Deliver Account Update View
+ * *********************************** */
+async function buildAccountUpdate (req, res, next) {
+    const account_id = req.params.accountId
+    console.log(account_id)
+    let nav = await utilities.getNav()
+    const acctData = await acctModel.getAccountByAccountId (account_id)
+    console.log(acctData)
+    const acctName = `${acctData.account_firstname} ${acctData.account_lastname}`
+    res.render("account/account-update", {
+      title: `Update ${acctName}'s Account`,
+      nav,
+      errors: null,
+      account_id: acctData.account_id,
+      account_firstname: acctData.account_firstname,
+      account_lastname: acctData.account_lastname,
+      account_email: acctData.account_email,
+      account_password: acctData.account_password      
+    })
+  }
+
+  /* *************************
+ * Process updateAccount
+ * ************************* */
+async function updateAccount(req, res) { // begins async function and passing in req, res, and next as params
+    let nav = await utilities.getNav() // Calls nav function from utilities
+    const account_id = req.body.account_id
+    const acctData = await acctModel.getAccountByAccountId (account_id)
+    const acctName = `${acctData.account_firstname} ${acctData.account_lastname}`
+    const { account_firstname, account_lastname, account_email } = req.body //collects and stores values from HTML form
+    
+
+    const updateResult = await acctModel.updateAccount( // calls the function, from model, uses "await" to indicate that result should be returned and wait until it arrives.
+        account_id,
+        account_firstname, // parameter being passed into the function
+        account_lastname, //parameter being passed into the function
+        account_email, // parameter being passed into the function
+    )
+
+    if (updateResult) { //opens if statement to determine if a result was received
+        req.flash( //sets a flash message to be displayed.
+            "notice",
+            `Congratulations, ${account_firstname} ${account_lastname} your account is updated!`
+        )
+        return res.status(201).render("account/account-management", { // calls render function to return the account-managment view with an HTTP 201 status for a successful insertion of data
+            title: "Account Management", 
+            nav,
+            errors: null,
+        })
+      } else { // closes the if block and opens the else block
+        req.flash("notice", "Sorry, the account update failed.") // calls render function, sends thr route to trigger a return to the account-update view 
+        return res.status(501).render("account/account-update", { //sends HTTP 501 status code. (not successful)
+                title: `Update ${acctName}'s Account`,
+                nav,
+                errors: null,
+                account_id: acctData.account_id,
+                account_firstname: acctData.account_firstname,
+                account_lastname: acctData.account_lastname,
+                account_email: acctData.account_email,   
+              })
+      }    
+}
+
+/* *************************
+ * Process Password Update
+ * ************************* */
+async function updatePassword(req, res) { // begins async function and passing in req, res, and next as params
+    let nav = await utilities.getNav() // Calls nav function from utilities
+    const account_id = req.body.account_id
+    const account_password = req.body.account_password
+    const acctData = await acctModel.getAccountByAccountId (account_id) 
+    const acctName = `${acctData.account_firstname} ${acctData.account_lastname}`
+
+    // check password match
+    const passwordMatch = await bcrypt.compare(account_password, acctData.account_password)
+    if (passwordMatch) {
+        req.flash("notice", "You cannot use the same password. Please enter a new password.")
+        return res.status(501).render("account/account-update", {
+            title: `Update ${acctName}'s Account`,
+            nav,
+            errors: null,
+            account_id: account_id,
+            account_firstname: acctData.account_firstname,
+            account_lastname: acctData.account_lastname,
+            account_email: acctData.account_email
+        })
+    }
+
+    let hashedPassword
+    try {
+        hashedPassword = await bcrypt.hash(account_password, 10)
+    } catch (error) {
+        req.flash("notice", 'Sorry, there was an error processing the passowrd update.')
+        return res.status(501).render("account/account-update", {
+            title: `Update ${acctName}'s Account`,
+            nav,
+            errors: null,
+            account_id: account_id,
+            account_firstname: acctData.account_firstname,
+            account_lastname: acctData.account_lastname,
+            account_email: acctData.account_email
+        })
+    }   
+
+    const updateResult = await acctModel.updatePassword(account_id, hashedPassword)
+
+    if (updateResult) {
+        req.flash("notice", `Congratulations, ${acctName} your password has been updated.`)
+        return res.status(201).render("account/account-management", {
+            title: "Account Management",
+            nav,
+            errors: null,
+        })
+    } else {
+        req.flash("notice", "Sorry, the password update failed.")
+        return res.status(501).render("account/account-update", {
+            title: `Update ${acctName}'s Account`,
+            nav,
+            errors: null,
+            account_id: account_id,
+            account_firstname: acctData.account_firstname,
+            account_lastname: acctData.account_lastname,
+            account_email: acctData.account_email
+        })
+    }
+}
+
+/* *********************************
+ * Account Logout Process
+ * *********************************/
+const logoutProcess = (req, res) => {
+    res.clearCookie("jwt")
+    req.flash("notice", "You are logged out.")
+    return res.redirect("/")
+}
+
+   
 
 
 
 
 
 
-module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildAccountManagement }
+module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildAccountManagement, buildAccountUpdate, updateAccount, updatePassword, logoutProcess }
