@@ -23,6 +23,16 @@ router.get("/registration", utilities.handleErrors(accountController.buildRegist
 router.get("/account-management", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagement))
 
 /* ****************************
+ * account-update Route
+ * **************************** */
+router.get("/account-update/:accountId", utilities.checkLogin,  utilities.handleErrors(accountController.buildAccountUpdate))
+
+/* ****************************
+ * Account logout Process
+ * ****************************/
+router.get("/logout", utilities.handleErrors(accountController.logoutProcess))
+
+/* ****************************
  * Process Registration
  * **************************** */
 // Process the reigstration data
@@ -40,6 +50,25 @@ router.post(
     regValidate.checkLoginData,
     utilities.handleErrors(accountController.accountLogin)
   )
+
+  /* ***************************
+   * Post Account Update
+   * *************************** */
+  router.post(
+    "/account-update",
+    regValidate.accountUpdateRules(),
+    regValidate.checkAcctUpdateData,
+    utilities.handleErrors(accountController.updateAccount)
+  )
+
+  router.post(
+    "/account-update/password",
+    regValidate.changePasswordRules(),
+    regValidate.checkUpdatePasswordData,
+    utilities.handleErrors(accountController.updatePassword)
+  )
+
+
 
 
 
