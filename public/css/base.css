@@ -353,6 +353,9 @@ img.alien {
 }
 
 /* Error Link in footer styling */
+.footer-container {
+  background-color: white;
+}
 footer p a {
   color: var(--main-font-color);
   font-size: 1.5em;
@@ -792,6 +795,7 @@ input:required:invalid,
   align-items: center;
   border-radius: 5px;
   width: 250px;
+  margin-bottom: 7px;
 }
 
 .update-account a,
