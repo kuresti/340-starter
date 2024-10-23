@@ -145,6 +145,12 @@ img.alien {
   margin-right: auto;
 }
 
+/* Account Management at Large view */
+.welcome-header,
+#welcome-link,
+#logout-link {
+    font-size: 1.25em;
+}
 
 
 }
