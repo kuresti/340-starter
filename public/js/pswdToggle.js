@@ -2,8 +2,8 @@
  * Toggle to show and hide passwords
  * ******************************* */
 
-    const toggleButton = document.getElementById("pswdbutton");
-    const pswdInput = document.getElementById("password");
+    const toggleButton = document.querySelector(".pswdbutton");
+    const pswdInput = document.querySelector("#password");
     toggleButton.addEventListener("click", function() {
         const type = pswdInput.getAttribute("type");
         if(type == "password") {
