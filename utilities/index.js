@@ -183,4 +183,28 @@ Util.checkAccountType = (req, res, next) => { // begins function and assigns it 
   } // ends the else block
 } // ends the function
 
+/* **************************************
+ * Build the inbox messages view HTML
+ * **************************************/
+Util.buildMessageTable = async function(data, mssgFrom) {
+  let table = "table class='inbox-mssg-table'>"
+  if (data) {
+    table += "<thead><tr><th>Received</th><th>Subject</th><th>From</td><th>Read</th</tr></thead>"
+    table += "<tbody>"
+
+    data.forEach((message) => {
+      table += `<tr>
+                  <td>${newDate(message.message_created).toLocalDateString()}</td>
+                  <td><a href='/account/read-new-message/${message.message_id}'>${message.message_subject}</a></td>
+                  <td>${message.mssgFromName}</td>
+                  <td>${message.message_read ? 'Read' : 'Unread'}</td>
+                </tr>`
+    })
+  } else {
+    table += '<p class="notice">No messages found.</p>'
+  }
+  table += '</table>'
+  return table
+}
+
 module.exports = Util
