@@ -358,7 +358,7 @@ img.alien {
   position: absolute;
   left: 50%;
   transform: translate(-50%);
-  width: 110vh;
+  width: 115vh;
   height: auto;
   padding: 4%;
   padding-bottom: 0;
@@ -382,6 +382,7 @@ footer p a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 15px;
 }
 
 
@@ -414,12 +415,13 @@ footer p a:hover {
 
 .login fieldset button {
   text-align: center;
-  width: 8rem;
+  width: 9rem;
   height: 2.25rem;
   border-radius: 5px;
   display: block;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: bold;
+  margin-top: 3px;
 }
 
 .login h2 {
@@ -708,6 +710,7 @@ input:required:invalid,
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 7px;
 }
 
 .account-update-form-container {
