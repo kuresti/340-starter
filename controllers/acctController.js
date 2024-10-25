@@ -126,12 +126,15 @@ async function accountLogin(req, res) { // opens async function and accepts req 
  * ********************************* */
 async function buildAccountManagement(req, res, next) {
     let nav = await utilities.getNav()
-
+    const message_to = req.params.accountId
+    const mssgCount = await acctModel.getMssgCountByMssgTo(message_to)
+    console.log(mssgCount)
     const accountData = res.locals.accountData
     console.log(accountData)
     res.render("account/account-management", {
         title: "Account Management", 
         nav,
+        mssgCount,
         errors: null,
     })
 }
@@ -273,6 +276,45 @@ const logoutProcess = (req, res) => {
     return res.redirect("/")
 }
 
+/* **********************************
+ * Build and deliver inbox view
+ * **********************************/
+async function buildInbox (req, res, next) {
+    let nav = await utilities.getNav() // gets the nav from the utilities.getNav() function
+    const message_to = req.params.accountId // Gets the account_id of the account the message is written to
+    const acctData = res.locals.accountData // Gets the signed in account holders accountData
+    let inboxMssg = await acctModel.getMssgByMssgTo(message_to) // Gets the inbox messages by calling acctModel.getMssgByMssgTo, which gets the messages by using the message_to id number
+
+    // Checks to see if there are any messages for message_to
+    if (inboxMssg.length === 0) {
+        req.flash("notice", "Your inbox is empty")
+        return res.redirect("/account/account-management") // If there are no messages in the inbox the user is redirected to the account-management view
+    }
+
+    
+    const mssgFromPromises = inboxMssg.map(message =>  // create new array mssgFromPromises to fetch the first and last name of each message_from
+        acctModel.getMssgFromAccountByAccountId(message.message_from) // The model function that is 'mapped' to get the account_firstname and account_lastname of mesage_from for each message
+    )
+
+    const messagesFrom = await Promise.all(mssgFromPromises) // Waits for all of the message_from data to be received
+
+    const messagesWithMssgFrom = inboxMssg.map((message, index) => { // Creates new array of inboxMssg adding message_from first and last name
+        const mssgFrom = messagesFrom[index]
+        message.mssgFromName = `${mssgFrom.account_firstname} ${mssgFrom.account_lastname}`
+        return message
+    })
+  
+    const table = await utilities.buildMessageTable(messagesWithMssgFrom)
+
+    res.render("account/inbox", {
+        title: `${acctData.account_firstname} ${acctData.account_lastname} Inbox`,
+        nav,
+        table,
+        errors: null,       
+    })
+  } 
+
+
    
 
 
@@ -280,4 +322,6 @@ const logoutProcess = (req, res) => {
 
 
 
-module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildAccountManagement, buildAccountUpdate, updateAccount, updatePassword, logoutProcess }
+module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildAccountManagement, buildAccountUpdate, updateAccount, updatePassword, logoutProcess,
+    buildInbox,
+ }
