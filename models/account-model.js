@@ -97,6 +97,70 @@ async function updateAccount(
     }
   }
 
+  /* ****************************
+   * Get Message count by `message_to`
+   * ****************************/
+  async function getMssgCountByMssgTo(message_to) {
+    try {
+        const sql = 
+        "SELECT COUNT(*) AS mssgCount FROM message WHERE message_to = $1 AND  message_read = FALSE"
+        const result = await pool.query(sql, [message_to])
+        const mssgCount = result.rows[0].mssgCount || 0
+              
+        return mssgCount
+    } catch (error) {
+        console.error("model error: " + error)
+        throw error
+    }
+  }
+
+  /* *******************************
+   * Get message data  by `message to`
+   * *******************************/
+  async function getMssgByMssgTo(message_to) { 
+    try{ 
+        const sql = 
+            "SELECT * FROM message WHERE message_to = $1"
+        const data = await pool.query(sql, [message_to])
+        
+        // Check to see if there are any messages in the array
+        if (data.rows.length === 0) {
+            console.log("No messages found")
+            return []
+        }
+        return data.rows
+    } catch (error) {
+        console.error("model error: " + error)
+        throw error
+    }
+
+}
+
+/* ***************************
+ * Return message_from account data using account_id
+ * *************************** */
+async function getMssgFromAccountByAccountId (account_id) { // creates the async function and adds the client_id as a parameter
+    try { // begins a try-catch block
+        const result = await pool.query( // creates a variable to store the results of the query.
+            'SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_id = $1', // SQL SELECT query. first arg in the pool.query function
+            [account_id])// passes in the client_id, as an array element to replace the placeholder of the SQL statement. Second arg in the pool.query
+
+            //check to see if there is any account info
+            if (result.rows.length === 0) {
+                return result
+            }
+
+            return result.rows[0] //sends the first records, from the result set returned by the query, back to where this function was called.
+
+    } catch (error) { // ends the "try" block and begins the "catch" block, with the "error" variable to store any errors that are thrown by the "try" block.
+        return new Error("No matching account_id found") // sends an error, if any, to the console for review.
+    }
+}
+
+
+
+
+    
 
 
 
@@ -107,4 +171,6 @@ async function updateAccount(
 
 
 
-module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountByAccountId , updateAccount, updatePassword}
+module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountByAccountId , updateAccount, updatePassword, getMssgCountByMssgTo,
+    getMssgByMssgTo, getMssgFromAccountByAccountId
+ }
