@@ -33,6 +33,11 @@ router.get("/account-update/:accountId", utilities.checkLogin,  utilities.handle
 router.get("/logout", utilities.handleErrors(accountController.logoutProcess))
 
 /* ****************************
+ * Deliver inbox view
+ * ****************************/
+router.get("/inbox", utilities.handleErrors(accountController.buildInbox))
+
+/* ****************************
  * Process Registration
  * **************************** */
 // Process the reigstration data
