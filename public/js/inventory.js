@@ -1,6 +1,6 @@
 'use strict' // Tells the JavaScript parser to follow all rules strictly.
 
-// Get a list of items in inventory based on tHE classification_id
+// Get a list of items in inventory based on the classification_id
 let classificationList = document.querySelector("#classificationList") // Finds the classification select element based on its ID, and stores its reference into a local variable.
 classificationList.addEventListener("change", function () { // Attaches the eventListener to classificationList and listens for any "change". When a "change" occurs an anonymous function is executed.
     let classification_id = classificationList.value // Captures the new value from the classification select element and stores it into a JS variable
@@ -11,7 +11,7 @@ classificationList.addEventListener("change", function () { // Attaches the even
         if (response.ok) { // "if" test to see if the response was returned successfully. If not, the error occurs
             return response.json(); // If the response was successful, then the JSON obj that was returned is converted to a JS obj and passed on to the next "then"
         } //Ends the "if" test
-        throw Error("Network response was not OK"); // The erro that occurs if the "if" test fails
+        throw Error("Network response was not OK"); // The error that occurs if the "if" test fails
     }) // Ends the "then" process above
     .then(function (data) { // Accepts JS obj and passes it as a parameter into an anonymous function
         console.log(data); // Sends the JS obj to the console log for testing purposes.
@@ -23,14 +23,14 @@ classificationList.addEventListener("change", function () { // Attaches the even
 }) // Ends the eventListener
 
 // Build inventory items into HTML table components and inject into DOM
-function buildInventoryList(data) { // Declares teh function and indicates the JS obj is a required parameter
+function buildInventoryList(data) { // Declares the function and indicates the JS obj is a required parameter
     let inventoryDisplay = document.getElementById("inventory-display"); // Reaches into the HTML doc, uses the ID to capture the element and assigns it to a JS variable
     // Set up the table labels 
     let dataTable = '<thead>'; // Creates a JS variable and stores the beginning HTML element into it as a string.
     dataTable += '<tr><th>Vehicle Name</th><td>&nbsp;</td><td>&nbsp;</td></tr>'; // Creates the table row and three table cells as a string and appends it to "dataTable"
     dataTable += '</thead>'; // Adds the closing "thead" element to the variable using the append operator
     // Set up the table body 
-    dataTable += '<tbody>'; // Appends teh opening "tbody" tag to the string stored in the variable.
+    dataTable += '<tbody>'; // Appends the opening "tbody" tag to the string stored in the variable.
     // Iterate over all vehicles in the array and put each in a row
     data.forEach(function (element){ // Implements the foreach method on the data obj. Each element in the obj is sent into an anonymous function as a parameter
         console.log(element.inv_id + ", " + element.inv_model); //Sends the name and id of each element to the console log for testing purposes.
