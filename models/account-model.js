@@ -139,7 +139,7 @@ async function updateAccount(
 /* ***************************
  * Return message_from account data using account_id
  * *************************** */
-async function getMssgFromAccountByAccountId (account_id) { // creates the async function and adds the client_id as a parameter
+async function getMssgFromAccountByAccountId (account_id) { // creates the async function and adds the client_id  of the message_from as a parameter
     try { // begins a try-catch block
         const result = await pool.query( // creates a variable to store the results of the query.
             'SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_id = $1', // SQL SELECT query. first arg in the pool.query function
@@ -157,20 +157,16 @@ async function getMssgFromAccountByAccountId (account_id) { // creates the async
     }
 }
 
-
-
-
-    
-
-
-
-
-
-
-
+/* ***************************
+ *  Get all account data
+ * ************************** */
+async function getAccounts(){
+    return await pool.query("SELECT * FROM public.account ORDER BY account_id")
+  }
+  
 
 
 
 module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountByAccountId , updateAccount, updatePassword, getMssgCountByMssgTo,
-    getMssgByMssgTo, getMssgFromAccountByAccountId
+    getMssgByMssgTo, getMssgFromAccountByAccountId, getAccounts,
  }
