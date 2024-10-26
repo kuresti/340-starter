@@ -2,6 +2,7 @@
  * Required resources
  * ********************************* */
 const invModel = require("../models/inventory-model")
+const acctModel = require("../models/account-model")
 const Util = {}
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
@@ -183,28 +184,59 @@ Util.checkAccountType = (req, res, next) => { // begins function and assigns it 
   } // ends the else block
 } // ends the function
 
-/* **************************************
- * Build the inbox messages view HTML
- * **************************************/
-Util.buildMessageTable = async function(data, mssgFrom) {
-  let table = "table class='inbox-mssg-table'>"
-  if (data) {
-    table += "<thead><tr><th>Received</th><th>Subject</th><th>From</td><th>Read</th</tr></thead>"
-    table += "<tbody>"
+/* *************************************
+ * Constructs the drop-down messageToList
+ * ************************************* */
+Util.buildMessageToList = async function (message_to = null) {
+  let data = await acctModel.getAccounts()
+  let messageToList = '<select name="message_to" id="messageToList"  required >'
+  messageToList += "<option value=''>Select a recipient</option>"
+  data.rows.forEach((row) => {
+    messageToList += '<option value="' + row.account_id + '"'
+    if ( message_to != null && row.account_id == message_to ) {
+      messageToList += " selected "
+    }
+    messageToList += ">" + row.account_firstname + " " +row.account_lastname + "</option>"
+  })
+  messageToList += "</select>"
+  return messageToList
+}
 
-    data.forEach((message) => {
-      table += `<tr>
-                  <td>${newDate(message.message_created).toLocalDateString()}</td>
-                  <td><a href='/account/read-new-message/${message.message_id}'>${message.message_subject}</a></td>
-                  <td>${message.mssgFromName}</td>
-                  <td>${message.message_read ? 'Read' : 'Unread'}</td>
-                </tr>`
-    })
-  } else {
-    table += '<p class="notice">No messages found.</p>'
-  }
-  table += '</table>'
-  return table
+/* **************************************
+ * Build message display table
+ * **************************************/
+Util.buildMssgDisplayTable = async function (inboxMssg){
+  let messageDisplay = '<table' //starts the table structure
+  // Set up the table labels 
+  messageDisplay += '<thead>'; // Creates a JS variable and stores the beginning HTML element into it as a string.
+  messageDisplay += '<tr><td>Received</td><td>Subject</td><td>From</td><td>Read</td></tr>'; // Creates the table row and three table cells as a string and appends it to "dataTable"
+  messageDisplay += '</thead>'; // Adds the closing "thead" element to the variable using the append operator
+  // Set up the table body 
+  messageDisplay += '<tbody>'; // Appends the opening "tbody" tag to the string stored in the variable.
+
+  // Create a new array of promises to fetch messageFrom names
+  const promises = inboxMssg.map(async (message) => {
+      const mssgFromData = await acctModel.getMssgFromAccountByAccountId(message.message_from) // Get the account data for the value of message_from
+      const mssgFromName = `${mssgFromData.account_firstname}+ " " +${mssgFromData.account_lastname}`
+      // Return table elements with message data. Also first and last name of message_from
+      return `
+          <tr> 
+              <td id="table-message-received">${newDate(message.message_created).toLocalDateString()}</td>
+              <td class="table-message-subject"><a href='/account/read-new-message/${message.message_id}'>${message.message_subject}</a>
+              </td>
+              <td class="table-message-from">${mssgFromName}</td>
+              <td class="table-message-read">${message.message_read}</td>
+          </tr>`
+  })
+
+  //Wait for promises to resolve
+  const rows = await Promise.all(promises)
+  messageDisplay += rows.join("") //Append all rows to the table body
+  messageDisplay += '</tbody>'
+  messageDisplay += '</table>'
+
+  return messageDisplay
+  
 }
 
 module.exports = Util
