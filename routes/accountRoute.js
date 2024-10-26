@@ -35,7 +35,12 @@ router.get("/logout", utilities.handleErrors(accountController.logoutProcess))
 /* ****************************
  * Deliver inbox view
  * ****************************/
-router.get("/inbox", utilities.handleErrors(accountController.buildInbox))
+router.get("/inbox/:accountId", utilities.handleErrors(accountController.buildInbox))
+
+/* ****************************
+ * Deliver create-message view
+ * ****************************/
+router.get("/new-message", utilities.handleErrors(accountController.buildNewMessage))
 
 /* ****************************
  * Process Registration
@@ -66,11 +71,21 @@ router.post(
     utilities.handleErrors(accountController.updateAccount)
   )
 
+  /* ****************************
+   * Post change password
+   * ****************************/
   router.post(
     "/account-update/password",
     regValidate.changePasswordRules(),
     regValidate.checkUpdatePasswordData,
     utilities.handleErrors(accountController.updatePassword)
+  )
+
+  /* *****************************
+   * Post create message
+   * *****************************/
+  router.post(
+    "/new-message"
   )
 
 
