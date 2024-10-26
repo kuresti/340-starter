@@ -43,10 +43,9 @@
 
             <div class="add-inventory-form-group">
                 <label class="above" for="inv-description" >Inventory Description:</label>
-                <textarea id="inv-description" name="inv_description" rows="15" cols="30" required >
-                    <%= locals.inv_description || '' %>
-                </textarea>
-              </div>
+                <textarea id="inv-description" name="inv_description" rows="15" cols="30" required ><%= locals.inv_description || '' %></textarea>                 
+                
+            </div>
 
             <div class="add-inventory-form-group">
                 <label class="above" for="inv-image" >Inventory Image:</label>
