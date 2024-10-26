@@ -18,14 +18,15 @@
 
 
 <div class="create-message">
-    <a href="account/create-message">Create Message</a>
+    <a href="/account/new-message">Create Message</a>
 </div>
 <div class="archived-messsage">
-    <a href="account/archived-messages">View <%= archivedMssgCount %> Archived Messages</a>
+    <a href="account/archived-messages">View Archived Messages</a>
 </div>
 
 <!--Inbox messages Tabe-->
 <div class="inbox-messages-table-container">
-  <%- table %>
+  
+    <%- mssgTableHTML %>
   
 </div>
