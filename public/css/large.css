@@ -138,6 +138,19 @@ footer p {
     font-size: .75em;
 }
 
+.footer-container {
+    background-color: white;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    width: 115vh;
+    height: auto;
+    padding: 4%;
+    padding-bottom: 0;
+    border: 7px solid var(--accent2);
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+      }
 /* Error styling at large view */
 img.alien {
   display: block;
@@ -150,6 +163,10 @@ img.alien {
 #welcome-link,
 #logout-link {
     font-size: 1.25em;
+}
+
+.new-message {
+    max-width: 550px;
 }
 
 
