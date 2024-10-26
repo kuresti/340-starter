@@ -358,18 +358,17 @@ img.alien {
   position: absolute;
   left: 50%;
   transform: translate(-50%);
-  width: 115vh;
+  width: 45vh;
   height: auto;
   padding: 4%;
   padding-bottom: 0;
-  border: 7px solid var(--accent2);
   border-radius: 10px;
   box-shadow: var(--box-shadow);
     }
 
 footer p a {
   color: var(--main-font-color);
-  font-size: 1.5em;
+  font-size: 1.25em;
   font-weight: 500;
 }
 
@@ -699,14 +698,16 @@ input:required:invalid,
 }
 
 /* ****************************************************
- * Add Inventory, Edit inventory, Account Update, 
- * Change Password View Styling
+ * The following Forms: Add Inventory, Edit inventory, 
+ * Account Update, Change Password View Styling,
+ * New Message
  * ****************************************************/
 .add-inventory-form-container,
 .edit-inventory-form-container,
 .delete-inventory-form-container,
 .account-update-form-container,
-.change-password-form-container {
+.change-password-form-container,
+.new-message-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -721,7 +722,8 @@ input:required:invalid,
 .edit-inventory,
 .delete-inventory,
 .account-update,
-.change-password {
+.change-password,
+.new-message {
   background-color: var(--accent2);
   padding: 20px;
   border-radius: 5px;
@@ -733,7 +735,8 @@ input:required:invalid,
 .edit-inventory .above,
 .delete-inventory .above,
 .account-update .above,
-.change-password .above {
+.change-password .above,
+.new-message .above {
   display: block;
   margin-bottom: 1.5%;
   font-weight: bold;
@@ -744,7 +747,8 @@ input:required:invalid,
 .edit-inventory input,
 .delete-inventory input,
 .account-update input,
-.change-password input {
+.change-password input,
+.new-message input {
   width: 80%;
   padding: .5rem;
   margin-bottom: .5rem;
@@ -756,20 +760,23 @@ input:required:invalid,
 .edit-inventory fieldset,
 .delete-inventory fieldset,
 .account-update fieldset,
-.change-password fieldset {
+.change-password fieldset,
+.new-message fieldset {
   border-color: var(--font-color-on-color);
   border-radius: 5px;
 }
 
 .add-inventory textarea,
-.edit-inventory textarea {
+.edit-inventory textarea,
+.new-message textarea {
   border-radius: 5px;
 }
 
 .add-inventory fieldset button,
 #update-button,
 #delete-button,
-#account-update {
+#account-update,
+#new-message-button{
   text-align: center;
   width: 8rem;
   height: 2.25rem;
@@ -788,11 +795,13 @@ input:required:invalid,
 }
 
 .add-inventory select,
-.edit-inventory select {
+.edit-inventory select,
+.new-message select {
   width: 80%;
   padding: .5rem;
   margin-bottom: .5rem;
   box-sizing: border-box;
+  border-radius: 5px;
 }
 
 .password-requirements {
