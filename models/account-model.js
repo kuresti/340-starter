@@ -103,11 +103,13 @@ async function updateAccount(
   async function getMssgCountByMssgTo(message_to) {
     try {
         const sql = 
-        "SELECT COUNT(*) AS mssgCount FROM message WHERE message_to = $1 AND  message_read = FALSE"
+        "SELECT COUNT(*) AS mssgcount FROM message WHERE message_to = $1 AND  message_read = FALSE"
         const result = await pool.query(sql, [message_to])
-        const mssgCount = result.rows[0].mssgCount || 0
+        const mssgCount = result.rows.length > 0 ? result.rows[0].mssgcount : 0
+        const parsedCount = parseInt(mssgCount, 10)
+        
               
-        return mssgCount
+        return isNaN(parsedCount) ? 0 : parsedCount
     } catch (error) {
         console.error("model error: " + error)
         throw error
@@ -163,10 +165,24 @@ async function getMssgFromAccountByAccountId (account_id) { // creates the async
 async function getAccounts(){
     return await pool.query("SELECT * FROM public.account ORDER BY account_id")
   }
+
+/* ***************************
+ * Post Send message
+ * ***************************/
+async function sendMessage(message_subject, message_body, message_to, message_from, message_read, message_archived){ // opens the async function lists seven parameters
+    try { // Opens a "try", part of "try - catch" error handling block
+        const sql = "INSERT INTO public.message (message_subject, message_body,  message_to, message_from, message_read, message_archived) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *"
+        console.log(sql)
+        return await pool.query(sql, [message_subject, message_body, message_to, message_from, message_read, message_archived]) // This line and above declares "sql" variable and query to write data to database
+
+    } catch (error) { // closes the "try" block and opens the "catch" block. Accepts an "error" variable to store any error that is thrown should the "try" block fail.
+        return error.message // sends back any error message that is found in the error object.
+    }
+}
   
 
 
 
 module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountByAccountId , updateAccount, updatePassword, getMssgCountByMssgTo,
-    getMssgByMssgTo, getMssgFromAccountByAccountId, getAccounts,
+    getMssgByMssgTo, getMssgFromAccountByAccountId, getAccounts, sendMessage,
  }
