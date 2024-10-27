@@ -189,6 +189,7 @@ Util.checkAccountType = (req, res, next) => { // begins function and assigns it 
  * ************************************* */
 Util.buildMessageToList = async function (message_to = null) {
   let data = await acctModel.getAccounts()
+  
   let messageToList = '<select name="message_to" id="messageToList"  required >'
   messageToList += "<option value=''>Select a recipient</option>"
   data.rows.forEach((row) => {
@@ -206,22 +207,22 @@ Util.buildMessageToList = async function (message_to = null) {
  * Build message display table
  * **************************************/
 Util.buildMssgDisplayTable = async function (inboxMssg){
-  let messageDisplay = '<table' //starts the table structure
+  let messageDisplay = '<table class="message-display">' //starts the table structure
   // Set up the table labels 
-  messageDisplay += '<thead>'; // Creates a JS variable and stores the beginning HTML element into it as a string.
-  messageDisplay += '<tr><td>Received</td><td>Subject</td><td>From</td><td>Read</td></tr>'; // Creates the table row and three table cells as a string and appends it to "dataTable"
-  messageDisplay += '</thead>'; // Adds the closing "thead" element to the variable using the append operator
+  messageDisplay += '<thead>' // Creates a JS variable and stores the beginning HTML element into it as a string.
+  messageDisplay += '<tr><th>Received</th><th>Subject</th><th>From</th><th>Read</th></tr>' // Creates the table row and three table cells as a string and appends it to "dataTable"
+  messageDisplay += '</thead>' // Adds the closing "thead" element to the variable using the append operator
   // Set up the table body 
-  messageDisplay += '<tbody>'; // Appends the opening "tbody" tag to the string stored in the variable.
+  messageDisplay += '<tbody>' // Appends the opening "tbody" tag to the string stored in the variable.
 
   // Create a new array of promises to fetch messageFrom names
   const promises = inboxMssg.map(async (message) => {
       const mssgFromData = await acctModel.getMssgFromAccountByAccountId(message.message_from) // Get the account data for the value of message_from
-      const mssgFromName = `${mssgFromData.account_firstname}+ " " +${mssgFromData.account_lastname}`
+      const mssgFromName = `${mssgFromData.account_firstname} ${mssgFromData.account_lastname}`
       // Return table elements with message data. Also first and last name of message_from
       return `
           <tr> 
-              <td id="table-message-received">${newDate(message.message_created).toLocalDateString()}</td>
+              <td id="table-message-received">${new Date(message.message_created).toLocaleDateString()}</td>
               <td class="table-message-subject"><a href='/account/read-new-message/${message.message_id}'>${message.message_subject}</a>
               </td>
               <td class="table-message-from">${mssgFromName}</td>
@@ -235,8 +236,24 @@ Util.buildMssgDisplayTable = async function (inboxMssg){
   messageDisplay += '</tbody>'
   messageDisplay += '</table>'
 
-  return messageDisplay
-  
+  return messageDisplay  
+}
+
+/* *********************************
+ * get the account_id of logged in user
+ * *********************************/
+Util.getLoggedInAcctId = (req) => {
+  const token = req.cookies.jwt //gets the jwt token from the cookie
+    if(!token) {
+      return null
+    }
+
+    try{
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET) //Verify the token
+      return decoded.account_id // extract the account_id from the token
+    } catch (err) {
+      return null
+    }
 }
 
 module.exports = Util
