@@ -85,7 +85,10 @@ router.post(
    * Post create message
    * *****************************/
   router.post(
-    "/new-message"
+    "/new-message",
+    regValidate.newMssgValidationRules(),
+    regValidate.checkNewMssgData,
+    utilities.handleErrors(accountController.sendMessage)
   )
 
 
