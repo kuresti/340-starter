@@ -1,18 +1,18 @@
 <%# Content Heading %>
 <% if (title) { %>
-    <h1><%= title %></h1>
-    <% } else {
-      res.redirect('/')
-    } %>
+  <h1><%= title %></h1>
+  <% } else {
+    res.redirect('/')
+  } %>
 
 <%# Flash message %>
 <%- messages() %>
 <% if (errors) { %> <!--EJS code block contianing "if" control to detect if an error variable exists and is not null-->
-  <ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
-    <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
-      <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
+<ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
+  <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
+    <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
 <% }) %>
-  </ul>
+</ul>
 <% } %>
 
 <p>This is an internal system only. Recipients are limted to accounts in the system.</p>
@@ -33,8 +33,8 @@
         </div>
 
         <div class="new-message-form-group">
-          <label class="above" for="message_created" >Create Message:</label>
-          <textarea id="message_created" name="message_created" rows="15" cols="30" required ><%= locals.message_created || '' %></textarea>
+          <label class="above" for="message_body" >Create Message:</label>
+          <textarea id="message_body" name="message_body" rows="15" cols="30" required ><%= locals.message_body || '' %></textarea>
               
         
 
@@ -42,6 +42,22 @@
       </div>
 
       <button type="submit" id="new-message-button">Send</button>
+      <input type="hidden" name="message_created" id="message_created"
+        value="<%= locals.message_created %>"
+      >      
+
+      <input type="hidden" name="message_from" id="message_from"
+        value="<%= locals.message_from %>"
+      >
+
+      <input type="hidden" name="message_read" id="message_read"
+        value="false" 
+      >
+
+      <input type="hidden" name="message_archived" id="message_archived"
+        value="false" 
+      >
     </fieldset>
   </form>
 </div>
+
