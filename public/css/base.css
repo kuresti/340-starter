@@ -13,6 +13,7 @@
   --primary-color: #023047;
   --accent1: #f7f6f3;
   --accent2: #0077B6;
+  --accent3: #f3eee0;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   --text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 
@@ -810,7 +811,10 @@ input:required:invalid,
 
 /*Account Management Styling*/
 .update-account,
-.management-inv {  
+.management-inv,
+.go-to-inbox,
+.create-message,
+.archived-messsage {  
   height: 3em;
   background-color: var(--primary-color);
   display: flex;
@@ -821,14 +825,52 @@ input:required:invalid,
   margin-bottom: 7px;
 }
 
+.create-message {
+  width: 200px;
+}
+
 .update-account a,
-.management-inv a{
+.management-inv a,
+.go-to-inbox a,
+.create-message a,
+.archived-messsage a{
   color: var(--font-color-on-color);
   text-decoration: none;
   padding: 2em;
   font-size: 1em;
   border: none;
 }
+
+/* *************************
+ * Inbox styling
+ * *************************/
+ .inbox-messages-table-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  margin-right: 5%;
+ }
+ .message-display table{
+  width: 100%;
+  border-collapse: collapse;
+ }
+
+ .message-display th, td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid var(--main-font-color);
+ }
+
+ .message-display tbody tr:nth-child(even) {
+  background-color: var(--accent3);
+ }
+
+ .message-display tbody tr:nth-child(odd) {
+  background-color: white;
+ }
+
+ 
 
 
 
