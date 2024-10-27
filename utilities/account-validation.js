@@ -243,6 +243,58 @@ validate.checkAcctUpdateData = async (req, res, next) => { // creates async, ano
     next() // if no errors are detected, the "next()" function is called, which allows the process to continue into the controller for the registration to be carried out.
 }
 
+/* **********************************
+ * New Message Validation Rules
+ * **********************************/
+validate.newMssgValidationRules = () => {
+    return [
+        // Selector must have a selection
+        body("message_to")
+        .not()
+        .notEmpty()
+        .withMessage("Please Select A Recipient."),
+
+        //Subject must be a string
+        body("message_subject")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isLength({ min: 2 })
+        .withMessage("Please provide a subject."),
+
+        //Message Body must be a string
+        body("message_body")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isLength({ min:2 })
+        .withMessage("Please provide a message.")
+    ]
+}
+
+/* *******************************
+ * Check new-message data and return errors or continue
+ * *******************************/
+validate.checkNewMssgData= async (req, res, next) => {
+    const { message_subject, message_body } = req.body //uses JS destructuring method to collect and store firstname, lastname, adn email values from the request body.
+        let errors = [] // creates an empty "errors" array
+        errors = validationResult(req) // calls the express-validator "validationResult" function and sends the request obj that contains all incoming data as a parameter. If there are errors they are stored in the errors array.
+        if (!errors.isEmpty()) { // checks the errors array to see if any errors exist. 
+            let nav = await utilities.getNav() //calls for the nav bar to be queried and built.
+            let messageToSelect = await utilities.buildMessageToList()
+            res.render("account/new-message", { // calls the render function to rebuild the new-message view.
+                errors, // this and items below are sent back to the view.
+                title: "New Message",
+                nav,
+                messageToSelect,
+                message_subject,
+                message_body
+            })
+            return // the "return" command sends control of the process back to the application, so the view in the browser does not "hang".
+        }
+        next() // if no errors are detected, the "next()" function is called, which allows the process to continue into the controller for the message to be sent.
+    }
+
 
 
 module.exports = validate
