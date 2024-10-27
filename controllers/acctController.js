@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken")
 const { validationResult } = require("express-validator")
 require("dotenv").config()
 
+
 /* *************************** 
  * Deliver login view
  * *************************** */
@@ -126,11 +127,10 @@ async function accountLogin(req, res) { // opens async function and accepts req 
  * ********************************* */
 async function buildAccountManagement(req, res, next) {
     let nav = await utilities.getNav()
-    const message_to = req.params.accountId
-    const mssgCount = await acctModel.getMssgCountByMssgTo(message_to)
-    console.log(mssgCount)
     const accountData = res.locals.accountData
-    console.log(accountData)
+    const message_to = accountData.account_id
+    const mssgCount = await acctModel.getMssgCountByMssgTo(message_to)
+   
     res.render("account/account-management", {
         title: "Account Management", 
         nav,
@@ -161,7 +161,7 @@ async function buildAccountUpdate (req, res, next) {
     })
   }
 
-  /* *************************
+/* *************************
  * Process updateAccount
  * ************************* */
 async function updateAccount(req, res) { // begins async function and passing in req, res, and next as params
@@ -279,19 +279,20 @@ const logoutProcess = (req, res) => {
 /* **********************************
  * Build and deliver inbox view
  * **********************************/
-async function buildInbox (req, res, next) {
+async function buildInbox (req, res) {
     let nav = await utilities.getNav() // gets the nav from the utilities.getNav() function
     const message_to = req.params.accountId
-    console.log(message_to)
     let acctData = await acctModel.getAccountByAccountId(message_to)
     let inboxMssg = await acctModel.getMssgByMssgTo(message_to)
+    console.log(inboxMssg)
     const acctName = `${acctData.account_firstname} ${acctData.account_lastname}`
 
     let mssgTableHTML
     if (inboxMssg && inboxMssg.length > 0) {
          mssgTableHTML = await utilities.buildMssgDisplayTable(inboxMssg)
+        
     } else {
-        mssgTableHTML = '<p>Your have no messages in your inbox.</p>'
+        mssgTableHTML = '<p>You have no messages in your inbox.</p>'
     }
     res.render("account/inbox", {
         title: `${acctName} Inbox`,
@@ -307,14 +308,85 @@ async function buildInbox (req, res, next) {
  * *************************** */
 async function buildNewMessage(req, res, next) {
     let nav = await utilities.getNav()
+    let account_id = await utilities.getLoggedInAcctId(req)
+    if (!account_id) {
+        return res.redirect("/account/login")
+    }
+    
+    const message_from = account_id
+
     let messageToSelect = await utilities.buildMessageToList()
+    console.log(messageToSelect)
     res.render("account/new-message", {
       title: "New Message",
       nav,
+      account_id,
       messageToSelect,
+      message_from,
       errors: null,
     })
   }
+
+  /* *************************
+ * build registration view
+ * ************************* */
+  async function buildRegistration(req, res, next) { // begins async function passing in req, res, and next params
+    let nav = await utilities.getNav() // Calls nav function from utilities
+    res.render("account/registration", { // data items to be sent to the registration view
+        title: "Registration",
+        nav,
+        errors: null,
+    })
+}
+
+/* *************************
+ * Process Send Message
+ * ************************* */
+async function sendMessage(req, res) { // begins async function and passing in req, res, and next as params
+    let nav = await utilities.getNav() // Calls nav function from utilities
+    let account_id = await utilities.getLoggedInAcctId(req) 
+    console.log(account_id)
+    const acctData = await acctModel.getAccountByAccountId(account_id)    
+    const acctName =`${acctData.account_firstname} ${acctData.account_lastname}`
+    const { message_subject, message_body, message_to, message_from, message_read, message_archived} = req.body //collects and stores values from HTML form
+    console.log(req.body)
+    let messageToSelect = await utilities.buildMessageToList()
+    
+
+    const mssgResult = await acctModel.sendMessage( // calls the function, from model, uses "await" to indicate that result should be returned and wait until it arrives.
+        message_subject, 
+        message_body,
+        message_to,//parameter being passed into the function
+        message_from,// parameter being passed into the function
+        message_read,//parameter being passed into the function
+        message_archived// parameter being passed into the function        
+    )
+
+    if (mssgResult) { //opens if statement to determine if a result was received
+        //let mssgTableHTML = await utilities.buildMssgDisplayTable(acctData)
+        let mssgTableHTML = "table"
+        req.flash( //sets a flash message to be displayed.
+            "notice",
+            "Message Sent" 
+        )
+        return res.status(201).render("account/inbox", { // calls render function to return the login view with an HTTP 201 status for a successful insertion of data
+            title: `${acctName} Inbox`,
+            nav, 
+            mssgTableHTML,           
+            errors: null,
+        })
+      } else { // closes the if block and opens the else block
+        req.flash("notice", "Sorry, message not sent.") // calls render function, sends thr route to trigger a return to the registration view 
+        
+        return res.status(501).render("account/new-message", { //sends HTTP 501 status code. (not successful)
+            title: "New Message",//elements of the data obj being sent to the view.
+            nav,
+            messageToSelect,
+            errors: null,
+        })
+      }    
+}
+
   
 
    
@@ -325,5 +397,5 @@ async function buildNewMessage(req, res, next) {
 
 
 module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildAccountManagement, buildAccountUpdate, updateAccount, updatePassword, logoutProcess,
-    buildInbox, buildNewMessage,
+    buildInbox, buildNewMessage, sendMessage
  }
