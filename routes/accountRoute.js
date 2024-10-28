@@ -43,6 +43,11 @@ router.get("/inbox/:accountId", utilities.handleErrors(accountController.buildIn
 router.get("/new-message", utilities.handleErrors(accountController.buildNewMessage))
 
 /* ****************************
+ * Deliver read-messages-view
+ * ****************************/
+router.get("/read-messages/:messageId", utilities.handleErrors(accountController.buildReadMessages))
+
+/* ****************************
  * Process Registration
  * **************************** */
 // Process the reigstration data
