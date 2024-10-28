@@ -387,6 +387,22 @@ async function sendMessage(req, res) { // begins async function and passing in r
       }    
 }
 
+/* ***********************************
+ * Build and deliver read-messages view
+ * ***********************************/
+async function buildReadMessages (req, res, next) {
+    const message_id= req.params.messageId   
+    const data = await acctModel.getMessageByMessageId(message_id)    
+    const grid = await utilities.buildReadMessagesGrid(data)
+    let nav = await utilities.getNav()
+    res.render("./account/read-messages", {
+      title: `${data.message_subject}`,
+      nav,
+      grid,
+      errors: null
+    })
+  }
+
   
 
    
@@ -397,5 +413,5 @@ async function sendMessage(req, res) { // begins async function and passing in r
 
 
 module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildAccountManagement, buildAccountUpdate, updateAccount, updatePassword, logoutProcess,
-    buildInbox, buildNewMessage, sendMessage
+    buildInbox, buildNewMessage, sendMessage, buildReadMessages
  }
