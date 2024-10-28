@@ -223,7 +223,7 @@ Util.buildMssgDisplayTable = async function (inboxMssg){
       return `
           <tr> 
               <td id="table-message-received">${new Date(message.message_created).toLocaleDateString()}</td>
-              <td class="table-message-subject"><a href='/account/read-new-message/${message.message_id}'>${message.message_subject}</a>
+              <td class="table-message-subject"><a href='/account/read-messages/${message.message_id}'>${message.message_subject}</a>
               </td>
               <td class="table-message-from">${mssgFromName}</td>
               <td class="table-message-read">${message.message_read}</td>
@@ -254,6 +254,44 @@ Util.getLoggedInAcctId = (req) => {
     } catch (err) {
       return null
     }
+}
+
+Util.buildReadMessagesGrid = async function(data) {
+  const mssgFromData = await acctModel.getMssgFromAccountByAccountId(data.message_from) // Get the account data for the value of message_from
+  const mssgFromName = `${mssgFromData.account_firstname} ${mssgFromData.account_lastname}`
+  let grid= " "
+  if(data){
+    grid += `<div class="read-message-container">`
+    grid += `<div class="subjec-title">`
+    grid += `<h3>Subject:</h3> <span>${data.message_subject}</span>`
+    grid += `</div>`
+    grid += `<div class="message-from-name">`
+    grid += `<h3>From:</h3> <span>${mssgFromName}</span>`
+    grid += `</div>`
+    grid += `<div class="message-body">`
+    grid += `<h3>Message:</h3> <span>${data.message_body}</span>`
+    grid += `</div>`
+    grid += `<hr />`
+    grid += `<div class="return-inbox">`
+    grid += `<a href=/account/inbox/${data.message_to}>Return to Inbox</a>`
+    grid += `</div>`
+    grid += `<div class="reply">`
+    grid += `<a href=/account/message-reply>Reply</a>`
+    grid += `</div>`
+    grid += `<div id="message-read">`
+    grid += `<button onclick="toggleTrueFalse(${data.message_read}")>Mark as Read</button>`
+    grid += `</div>`
+    grid += `<div id="archived">`
+    grid += `<button onclick="toggleTrueFalse(${data.message_archived}")>Archive Message</button`
+    grid += `</div>`
+    grid += `<div id="delete-message">`
+    grid += `<button onclick="deleteMessage(${data.message_id}")>Delete Message</button>`
+    grid += `</div>`
+    grid += `</div>`
+  } else {
+    grid += '<p class="notice">Sorry, no message data could be found.'
+  }
+  return grid
 }
 
 module.exports = Util
