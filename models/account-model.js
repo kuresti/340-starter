@@ -107,8 +107,7 @@ async function updateAccount(
         const result = await pool.query(sql, [message_to])
         const mssgCount = result.rows.length > 0 ? result.rows[0].mssgcount : 0
         const parsedCount = parseInt(mssgCount, 10)
-        
-              
+                      
         return isNaN(parsedCount) ? 0 : parsedCount
     } catch (error) {
         console.error("model error: " + error)
@@ -179,10 +178,22 @@ async function sendMessage(message_subject, message_body, message_to, message_fr
         return error.message // sends back any error message that is found in the error object.
     }
 }
+
+/* ***************************
+ * Get message by message_id
+ * ***************************/
+    async function getMessageByMessageId(message_id) {
+        const data = await pool.query(
+          "SELECT * FROM public.message WHERE message_id = $1 ORDER BY message_id",
+          [message_id]
+        )
+        return data.rows[0]
+      }
+
   
 
 
 
 module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountByAccountId , updateAccount, updatePassword, getMssgCountByMssgTo,
-    getMssgByMssgTo, getMssgFromAccountByAccountId, getAccounts, sendMessage,
+    getMssgByMssgTo, getMssgFromAccountByAccountId, getAccounts, sendMessage, getMessageByMessageId
  }
