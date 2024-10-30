@@ -48,6 +48,11 @@ router.get("/new-message", utilities.handleErrors(accountController.buildNewMess
 router.get("/read-messages/:messageId", utilities.handleErrors(accountController.buildReadMessages))
 
 /* ****************************
+ * Deliver reply-message view
+ * ****************************/
+router.get("/reply-message/:messageId", utilities.handleErrors(accountController.buildReplyMessage))
+
+/* ****************************
  * Process Registration
  * **************************** */
 // Process the reigstration data
@@ -58,7 +63,9 @@ router.post( // Router object using a "post" property.
     utilities.handleErrors(accountController.registerAccount) // The call to the controller to handle the registration, if no errors occur in the validation process.
 )
 
-// Process the login attempt
+/* ****************************
+ *  Process the login attempt
+ * ****************************/
 router.post(
     "/login",
     regValidate.loginRules(),
@@ -96,6 +103,35 @@ router.post(
     utilities.handleErrors(accountController.sendMessage)
   )
 
+  /* *****************************
+   * Post reply message
+   * *****************************/
+  router.post(
+    "/reply-message",
+    regValidate.replyMssgValidationRules(),
+    regValidate.checkReplyMssgData,
+    utilities.handleErrors(accountController.sendReplyMessage)
+  )
+
+  /* *******************************
+   * Post toggle-read-status
+   * *******************************/
+  router.post(
+    "/read-messages/:messageId/read",
+    accountController.markMessageRead,
+  )
+
+  router.post(
+    "/read-messages/:messageId/archive",
+    accountController.archiveMessage
+  )
+
+  router.post(
+    "/read-messages/:messageId/delete",
+    accountController.deleteMessage
+  )
+
+ 
 
 
 
