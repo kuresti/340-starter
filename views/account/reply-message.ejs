@@ -1,0 +1,77 @@
+<%# Content Heading %>
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else {
+      res.redirect('/')
+    } %>
+  
+  <%# Flash message %>
+  <%- messages() %>
+  <% if (errors) { %> <!--EJS code block contianing "if" control to detect if an error variable exists and is not null-->
+  <ul class="notice"> <!--If errors exist, create an unordered list with a class for styling-->
+    <% errors.array().forEach(error => { %> <!--Treat erros variable as an array and loop through array, each individual error being sent into a callback function-->
+      <li><%= error.msg %></li> <!--create a list item and display the message attached to the error element -->
+  <% }) %>
+  </ul>
+  <% } %>
+
+
+
+
+  <!--Reply Message Form-->
+<div class="reply-form-container">
+    <form class="reply-message" action="/account/reply-message" method="POST">
+      <!--Original message details in hidden fields-->
+      <input type="hidden" name="original_message_id" value="<%= original_message_id %>">
+      <input type="hidden" name="original_message_subject" value="<%= original_message_subject %>">  
+      <input type="hidden" name="original_replyMssgToName" value="<%= original_replyMssgToName %>" >
+      <input type="hidden" name="original_message_body" value="<%= original_message_body %>" >
+      <input type="hidden" name="original_message_from" value="<%= original_message_from %>" >
+      <input type="hidden" name="original_account_id" value="<%= original_account_id %>" >
+
+      <!--Original Message-->
+      <h3>Original Message</h3>
+      <p><strong>From:</strong> <%= original_replyMssgToName %></p>
+      <p><strong>Subject:</strong> <%= original_message_subject %></p>
+      <p><strong>Message:</strong> <%= original_message_body %></p>
+
+      <fieldset>
+        <legend><h3>Reply Message</h3></legend>
+        <div class="reply-message-form-group">
+          <div class="reply-message-form-group">  
+            <label class="above" for="message_to">To: </label>
+            <input type="text" id="message_to_display" name="message_to_display" readonly required value="<%= errors ? message_to_display : original_replyMssgToName %>">
+            <input type="hidden" id="message_to" name="message_to" required value="<%= errors ? message_to : original_message_from %>" >
+          </div> 
+          
+          <div class="reply-message-form-group">
+            <label class="above" for="message_subject" >Reply Subject: </label>
+            <input type="text" id="message_subject" name="message_subject" required value="<%= locals.message_subject %>">
+          </div>
+  
+          <div class="reply-message-form-group">
+            <label class="above" for="message_body" >Reply Message: </label>
+            <textarea id="message_body" name="message_body" rows="15" cols="30" required ><%= locals.message_body || '' %></textarea>
+          </div>
+        </div>
+  
+        <button type="submit" id="reply-message-button">Send</button>
+        <input type="hidden" name="message_created" id="message_created"
+          value="<%= locals.message_created %>"
+        >      
+  
+        <input type="hidden" name="message_from" id="message_from"
+          value="<%= locals.message_from %>"
+        >
+  
+        <input type="hidden" name="message_read" id="message_read"
+          value="false" 
+        >
+  
+        <input type="hidden" name="message_archived" id="message_archived"
+          value="false" 
+        >
+      </fieldset>
+    </form>
+  </div>
+  
