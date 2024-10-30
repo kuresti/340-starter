@@ -276,24 +276,102 @@ validate.newMssgValidationRules = () => {
  * Check new-message data and return errors or continue
  * *******************************/
 validate.checkNewMssgData= async (req, res, next) => {
-    const { message_subject, message_body } = req.body //uses JS destructuring method to collect and store firstname, lastname, adn email values from the request body.
+    const { message_subject, message_body, message_to } = req.body //uses JS destructuring method to collect and store firstname, lastname, adn email values from the request body.
         let errors = [] // creates an empty "errors" array
         errors = validationResult(req) // calls the express-validator "validationResult" function and sends the request obj that contains all incoming data as a parameter. If there are errors they are stored in the errors array.
         if (!errors.isEmpty()) { // checks the errors array to see if any errors exist. 
             let nav = await utilities.getNav() //calls for the nav bar to be queried and built.
-            let messageToSelect = await utilities.buildMessageToList()
+            let messageToSelect = await utilities.buildMessageToList(message_to)
             res.render("account/new-message", { // calls the render function to rebuild the new-message view.
                 errors, // this and items below are sent back to the view.
                 title: "New Message",
                 nav,
-                messageToSelect,
+                messageToSelect: messageToSelect,
                 message_subject,
-                message_body
+                message_body,
+                message_to
             })
             return // the "return" command sends control of the process back to the application, so the view in the browser does not "hang".
         }
         next() // if no errors are detected, the "next()" function is called, which allows the process to continue into the controller for the message to be sent.
     }
+
+/* *******************************
+ * Reply message validation rules
+ * *******************************/
+validate.replyMssgValidationRules = () => {
+    return [
+        // Message To must be a string
+        body("message_to")
+        .trim()
+        .escape()
+        .notEmpty(),
+        //Subject must be a string
+        body("message_subject")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isLength({ min: 2 })
+        .withMessage("Please provide a subject."),
+
+        //Message Body must be a string
+        body("message_body")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isLength({ min:2 })
+        .withMessage("Please provide a message.")
+    ]
+}
+
+/* *************************************
+ * Check Reply Message Data
+ * *************************************/
+validate.checkReplyMssgData = async (req, res, next) => { // creates async, anonymous function accepts(req, res, next) as params, assigns it to the "checkRegData" property of the validate object.
+    const {
+        message_subject,
+        message_body,
+        message_to,
+        message_from,
+        message_read,
+        message_archived,
+        original_message_id,
+        original_message_from,
+        original_message_subject,
+        original_message_body,
+        original_replyMssgToName,
+        message_to_display,
+        original_account_id
+    } = req.body//uses JS destructuring method to collect and store firstname, lastname, and email values from the request body.
+    
+    let errors = [] // creates an empty "errors" array
+    errors = validationResult(req) // calls the express-validator "validationResult" function and sends the request obj that contains all incoming data as a parameter. If there are errors they are stored in the errors array.
+    if (!errors.isEmpty()) { // checks the errors array to see if any errors exist. 
+        let nav = await utilities.getNav() //calls for the nav bar to be queried and built.
+        const acctData = await accountModel.getAccountByAccountId(original_account_id)
+        const acctName = `${acctData.account_firstname} ${acctData.account_lastname}`
+        res.render("account/reply-message", { // calls the render function to rebuild the reply-message view.
+            errors, // this and items below are sent back to the view.
+            title: "Create Reply Message",
+            nav,
+            message_from,
+            original_message_id,
+            original_message_from,
+            original_message_subject,
+            original_replyMssgToName,
+            message_to_display,
+            original_message_body,
+            original_account_id,
+            message_subject,
+            message_body,
+            message_to,
+            message_read,
+            message_archived
+        })
+        return // the "return" command sends control of the process back to the application, so the view in the browser does not "hang".
+    }
+    next() // if no errors are detected, the "next()" function is called, which allows the process to continue into the controller for the registration to be carried out.
+}
 
 
 
