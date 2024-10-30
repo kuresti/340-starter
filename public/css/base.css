@@ -701,14 +701,15 @@ input:required:invalid,
 /* ****************************************************
  * The following Forms: Add Inventory, Edit inventory, 
  * Account Update, Change Password View Styling,
- * New Message
+ * New Message, Reply message form styling
  * ****************************************************/
 .add-inventory-form-container,
 .edit-inventory-form-container,
 .delete-inventory-form-container,
 .account-update-form-container,
 .change-password-form-container,
-.new-message-form-container {
+.new-message-form-container,
+.reply-form-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -724,7 +725,8 @@ input:required:invalid,
 .delete-inventory,
 .account-update,
 .change-password,
-.new-message {
+.new-message,
+.reply-message {
   background-color: var(--accent2);
   padding: 20px;
   border-radius: 5px;
@@ -737,7 +739,8 @@ input:required:invalid,
 .delete-inventory .above,
 .account-update .above,
 .change-password .above,
-.new-message .above {
+.new-message .above,
+.reply-message .above {
   display: block;
   margin-bottom: 1.5%;
   font-weight: bold;
@@ -749,7 +752,8 @@ input:required:invalid,
 .delete-inventory input,
 .account-update input,
 .change-password input,
-.new-message input {
+.new-message input,
+.reply-message input {
   width: 80%;
   padding: .5rem;
   margin-bottom: .5rem;
@@ -762,14 +766,16 @@ input:required:invalid,
 .delete-inventory fieldset,
 .account-update fieldset,
 .change-password fieldset,
-.new-message fieldset {
+.new-message fieldset,
+.reply-message fieldset {
   border-color: var(--font-color-on-color);
   border-radius: 5px;
 }
 
 .add-inventory textarea,
 .edit-inventory textarea,
-.new-message textarea {
+.new-message textarea,
+.reply-message textarea {
   border-radius: 5px;
 }
 
@@ -777,7 +783,8 @@ input:required:invalid,
 #update-button,
 #delete-button,
 #account-update,
-#new-message-button{
+#new-message-button,
+#reply-message-button{
   text-align: center;
   width: 8rem;
   height: 2.25rem;
@@ -880,17 +887,21 @@ input:required:invalid,
 
  /* ****************************
   * Styling for read-messages
+  * and reply messages
   * ****************************/
-  .read-message-container h3 {
+  .read-message-container h3,
+  .message-received-container h3 {
     display: inline-block;
     margin: 0;
   }
 
-  .read-message-container span {
+  .read-message-container span,
+  .message-received-container span {
     font-size: 1.25em;
   }
 
-  .read-message-container hr {
+  .read-message-container hr,
+  .message-received-container hr {
     border: 3px solid var(--main-font-color);
   }
 
@@ -917,8 +928,10 @@ input:required:invalid,
   border: none;
   }
 
- #message-read button,
- #archived button{
+ .message-read-button,
+ #archived button,
+ .message-archived-button,
+ .message-delete-button {
   height: 3em;
   background-color: var(--primary-color);
   display: flex;
@@ -929,6 +942,8 @@ input:required:invalid,
   margin-bottom: 7px;
   color: var(--font-color-on-color);
  }
+
+ 
 
 
 
