@@ -276,16 +276,12 @@ Util.buildReadMessagesGrid = async function(data) {
     grid += `<a href=/account/inbox/${data.message_to}>Return to Inbox</a>`
     grid += `</div>`
     grid += `<div class="reply">`
-    grid += `<a href=/account/message-reply>Reply</a>`
+    grid += `<a href=/account/reply-message/${data.message_id}>Reply</a>`
     grid += `</div>`
-    grid += `<div id="message-read">`
-    grid += `<button onclick="toggleTrueFalse(${data.message_read}")>Mark as Read</button>`
-    grid += `</div>`
-    grid += `<div id="archived">`
-    grid += `<button onclick="toggleTrueFalse(${data.message_archived}")>Archive Message</button`
-    grid += `</div>`
-    grid += `<div id="delete-message">`
-    grid += `<button onclick="deleteMessage(${data.message_id}")>Delete Message</button>`
+    grid += `<div id="message-actions-container">`
+    grid += `<button type="button" class="message-read-button" data-message-id="${data.message_id}" data-message-read="${data.message_read}">Mark as Read</button>`
+    grid += `<button type="button" class="message-archived-button" data-message-archived="${data.message_archived}" data-message-id="${data.message_id}">Archive Message</button>`
+    grid += `<button type="button" class="message-delete-button" data-message-id="${data.message_id}">Delete Message</button>`
     grid += `</div>`
     grid += `</div>`
   } else {
