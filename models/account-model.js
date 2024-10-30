@@ -182,7 +182,7 @@ async function sendMessage(message_subject, message_body, message_to, message_fr
 /* ***************************
  * Get message by message_id
  * ***************************/
-    async function getMessageByMessageId(message_id) {
+async function getMessageByMessageId(message_id) {
         const data = await pool.query(
           "SELECT * FROM public.message WHERE message_id = $1 ORDER BY message_id",
           [message_id]
@@ -190,10 +190,55 @@ async function sendMessage(message_subject, message_body, message_to, message_fr
         return data.rows[0]
       }
 
+/* ****************************
+ * Post message_read toggle status
+ * *****************************/
+async function markMessageRead(message_read, message_id) {
+    const sql = "UPDATE public.message SET message_read = $1 WHERE message_id = $2"
+    const params = [message_read, message_id]
+    try {
+        await pool.query(sql, params)
+        return true
+    } catch (error) {
+        console.error("Error updating message_read", error)
+        return false
+    }
+}
+
+/* *********************************
+ * Post Archive Message status
+ * *********************************/
+async function archiveMessage(message_archived, message_id) {
+    const sql = "UPDATE public.message SET message_archived = $1 WHERE message_id =$2"
+    const params = [message_archived, message_id]
+    
+    try {
+        await pool.query(sql, params)
+        return true
+    } catch (error) {
+        console.error("Error updating message_archived", error)
+        return false
+    }
+}
+
+/* ************************************
+ * Delete Message
+ * ************************************/
+async function deleteMessage(message_id) {
+   
+    try {
+      const sql = "DELETE FROM public.message WHERE message_id = $1"        
+      const data = await pool.query(sql, [ message_id ])
+      return data
+    } catch (error) {
+      new Error("Delete Inventory Error")
+    }   
+  }
+
   
 
 
 
 module.exports = { registerAccount, checkExistingEmail, getAccountByEmail, getAccountByAccountId , updateAccount, updatePassword, getMssgCountByMssgTo,
-    getMssgByMssgTo, getMssgFromAccountByAccountId, getAccounts, sendMessage, getMessageByMessageId
+    getMssgByMssgTo, getMssgFromAccountByAccountId, getAccounts, sendMessage, getMessageByMessageId, markMessageRead, archiveMessage, deleteMessage
  }
