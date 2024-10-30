@@ -348,18 +348,19 @@ async function sendMessage(req, res) { // begins async function and passing in r
     console.log(account_id)
     const acctData = await acctModel.getAccountByAccountId(account_id)    
     const acctName =`${acctData.account_firstname} ${acctData.account_lastname}`
-    const { message_subject, message_body, message_to, message_from, message_read, message_archived} = req.body //collects and stores values from HTML form
+    const { message_subject, message_body, message_to, message_from, message_read, message_archived } = req.body //collects and stores values from HTML form
     console.log(req.body)
-    let messageToSelect = await utilities.buildMessageToList()
+   
+    
     
 
     const mssgResult = await acctModel.sendMessage( // calls the function, from model, uses "await" to indicate that result should be returned and wait until it arrives.
-        message_subject, 
-        message_body,
-        message_to,//parameter being passed into the function
-        message_from,// parameter being passed into the function
-        message_read,//parameter being passed into the function
-        message_archived// parameter being passed into the function        
+        message_subject, //parameter being passed into the function
+        message_body, //parameter being passed into the function
+        message_to, //parameter being passed into the function
+        message_from, // parameter being passed into the function
+        message_read, //parameter being passed into the function
+        message_archived // parameter being passed into the function        
     )
 
     if (mssgResult) { //opens if statement to determine if a result was received
@@ -377,12 +378,16 @@ async function sendMessage(req, res) { // begins async function and passing in r
         })
       } else { // closes the if block and opens the else block
         req.flash("notice", "Sorry, message not sent.") // calls render function, sends thr route to trigger a return to the registration view 
-        
+        let messageToSelect = await utilities.buildMessageToList(message_to)
         return res.status(501).render("account/new-message", { //sends HTTP 501 status code. (not successful)
             title: "New Message",//elements of the data obj being sent to the view.
             nav,
-            messageToSelect,
+            account_id,
+            messageToSelect: messageToSelect,
             errors: null,
+            message_subject,
+            message_body, 
+            message_to          
         })
       }    
 }
@@ -399,9 +404,162 @@ async function buildReadMessages (req, res, next) {
       title: `${data.message_subject}`,
       nav,
       grid,
+      message_id: data.message_id,
+      message_read: data.message_read,
+      message_archived: data.message_archived,
       errors: null
     })
   }
+
+  /* **********************************
+   * Build and deliver reply-message view
+   * **********************************/
+  async function buildReplyMessage(req, res, next) {
+    let nav = await utilities.getNav()
+    const message_id = req.params.messageId   
+    const data = await acctModel.getMessageByMessageId(message_id) 
+    let account_id = await utilities.getLoggedInAcctId(req)
+    console.log(account_id)
+    if (!account_id) {
+        return res.redirect("/account/login")
+    } 
+    const mssgFromData = await acctModel.getMssgFromAccountByAccountId(data.message_from) // Get the account data for the value of message_from
+    const replyMssgToName = `${mssgFromData.account_firstname} ${mssgFromData.account_lastname}`   
+    const message_from = account_id
+    res.render("account/reply-message", {
+      title: "Create Reply Message",
+      nav,
+      account_id,
+      message_from,
+      original_message_id: message_id,
+      original_message_from: data.message_from,
+      original_message_subject: data.message_subject,
+      original_replyMssgToName: replyMssgToName,
+      message_to_display: replyMssgToName,
+      original_message_body: data.message_body,
+      original_account_id: account_id,
+      errors: null,
+    })
+  }
+
+  /* *****************************************
+   * Process post reply message
+   * *****************************************/
+  async function sendReplyMessage(req, res) { // begins async function and passing in req, res, and next as params
+    let nav = await utilities.getNav()
+    let account_id = await utilities.getLoggedInAcctId(req) 
+    console.log(account_id)
+    const acctData = await acctModel.getAccountByAccountId(account_id)  
+    let inboxMssg = await acctModel.getMssgByMssgTo(account_id)  
+    const acctName =`${acctData.account_firstname} ${acctData.account_lastname}`
+    
+    const {
+        message_subject,
+        message_body,
+        message_to,
+        message_from,
+        message_read,
+        message_archived,
+        original_message_id,
+        original_message_from,
+        original_message_subject,
+        original_message_body,
+        original_replyMssgToName
+    } = req.body
+    console.log(req.body)
+         
+    const mssgResult = await acctModel.sendMessage(
+        message_subject,
+        message_body,
+        message_to,
+        message_from,
+        message_read,
+        message_archived
+    )
+
+    if (mssgResult) {
+        let mssgTableHTML
+    if (inboxMssg && inboxMssg.length > 0) {
+         mssgTableHTML = await utilities.buildMssgDisplayTable(inboxMssg)
+        
+    } else {
+        mssgTableHTML = '<p>You have no messages in your inbox.</p>'
+    }
+        req.flash("notice", "Message Sent") 
+            return res.status(201).render("account/inbox", {
+                title: `${acctName} Inbox`,
+                nav,
+                mssgTableHTML,
+                errors: null
+            })
+    } else {
+        req.flash("notice", "Sorry, message not sent")
+        return res.status(501).render("account/reply-message", {
+            title: "Create Reply Message",
+            nav,
+            errors: null,
+            message_to,
+            message_subject,
+            message_body,
+            message_id: original_message_id,
+            original_message_id,
+            original_message_from,
+            original_message_subject,
+            original_replyMssgToName,
+            original_message_body
+        })
+        
+    }
+}
+
+/* *************************************
+ * Mark Message Read
+ * *************************************/
+async function markMessageRead(req, res) {
+    const message_id = req.params.messageId
+    const message_read = true
+   
+        const result = await acctModel.markMessageRead(message_read, message_id)
+
+        if (result) {
+            return res.status(201).json({message: "Message markes as read."})
+        } else {
+            return res.status(501).json({message: "Failed to mark message read."})
+        }
+}
+
+/* ****************************************
+ * Archive Message
+ * ****************************************/
+async function archiveMessage(req, res) {
+    const message_id = req.params.messageId
+    const message_archived = true
+
+    const result = await acctModel.archiveMessage(message_archived, message_id)
+    
+    if (result) {
+        return res.status(201).json({message: "Message is archived."})
+    } else {
+        return res.status(501).json({message: "Failed to archive message."})
+    }
+}
+
+/* *****************************************
+ * Delete Message
+ * *****************************************/
+async function deleteMessage(req, res) {
+    const message_id = req.params.messageId
+
+    const deleteResult = await acctModel.deleteMessage(message_id)
+
+    if (result) {
+        return res.status(201).json({message: "Message deleted."})
+    } else {
+        return res.status(501).json({message: "Message not deleted"})
+    }
+}
+
+
 
   
 
@@ -413,5 +571,5 @@ async function buildReadMessages (req, res, next) {
 
 
 module.exports = { buildLogin, buildRegistration, registerAccount, accountLogin, buildAccountManagement, buildAccountUpdate, updateAccount, updatePassword, logoutProcess,
-    buildInbox, buildNewMessage, sendMessage, buildReadMessages
+    buildInbox, buildNewMessage, sendMessage, buildReadMessages, buildReplyMessage, sendReplyMessage, markMessageRead, archiveMessage, deleteMessage
  }
